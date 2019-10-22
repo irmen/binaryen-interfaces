@@ -15,7 +15,7 @@ def import_functions():
     import inspect
     _current_module = __import__(__name__)
     for name, member in inspect.getmembers(lib):
-        if inspect.isbuiltin(member) or inspect.isfunction(member) or inspect.ismethod(member):
+        if inspect.isroutine(member):
             if name.startswith("Binaryen"):
                 name = name[8:]
         setattr(_current_module, name, member)
