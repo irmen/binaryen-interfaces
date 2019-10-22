@@ -1,0 +1,15 @@
+prune examples
+include build_ffi_module.py
+include LICENSE
+include Makefile
+recursive-include tests *
+global-exclude */.svn/*
+global-exclude */.idea/*
+global-exclude *.class
+global-exclude *.pyc
+global-exclude *.pyo
+global-exclude *.coverage
+global-exclude .git
+global-exclude .gitignore
+global-exclude .tox
+global-exclude __pycache__

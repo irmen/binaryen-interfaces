@@ -1,0 +1,27 @@
+# Project specific
+Pipfile
+NOTES.md
+
+# Virtual enviroment
+/.venv/
+
+# Vscode
+/.vscode/
+*.iml
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+# output samples, but don't exclude the samples dir
+.mypy_cache/
+.eggs/
+.pytest_cache/
+.idea/
+build
+dist
+*.egg-info/
+.directory
+*.o
+*.so
+*.c
