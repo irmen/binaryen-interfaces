@@ -2,7 +2,7 @@ import os
 import subprocess
 from cffi import FFI
 
-cpreprocess = True
+usesysteminstalled = True
 print("Processing binaryen-c.h header file...")
 header_location = "/usr/include/binaryen-c.h"
 if not os.path.isfile(header_location):
@@ -10,9 +10,9 @@ if not os.path.isfile(header_location):
     if not os.path.isfile(header_location):
         print("(Can't find system installed version, using prepackaged version)")
         header_location = "binaryen-c-pp.h"
-        cpreprocess = False
+        usesysteminstalled = False
     
-if cpreprocess:
+if usesysteminstalled:
     print("(Using system installed version)")
     proc = subprocess.Popen(["cpp", "-nostdinc", "-E", "-P", header_location], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     headerfile_src = proc.stdout.read().decode("utf-8").splitlines()
@@ -34,18 +34,17 @@ if cpreprocess:
         pass
         
     headerfile = "\n".join(lines)
+    ffi_c_source="""
+    #include <binaryen-c.h>
+"""
 else:
     headerfile = open(header_location, "rt").read()
+    ffi_c_source = headerfile
     
     
 ffibuilder = FFI()
 ffibuilder.cdef(headerfile)
- 
-ffibuilder.set_source("_binaryen", """
-    #include "binaryen-c.h" 
-""",
-                      libraries=['binaryen']
-                      )
+ffibuilder.set_source("_binaryen", ffi_c_source, libraries=['binaryen'])
 
 
 if __name__ == "__main__":
