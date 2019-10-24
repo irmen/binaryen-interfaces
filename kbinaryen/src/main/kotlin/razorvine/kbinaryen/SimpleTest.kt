@@ -1,4 +1,5 @@
-import net.razorvine.kbinaryen.*
+package razorvine.kbinaryen
+
 import kotlin.system.measureTimeMillis
 
 fun main() {
