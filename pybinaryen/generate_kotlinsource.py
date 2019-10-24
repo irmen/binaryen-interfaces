@@ -78,9 +78,11 @@ def process_function(line):
             if "[" in pname:
                 pname, _, _ = pname.partition("[")
                 ctype += "*"
-            ktype = ctype_to_kotlin(ctype)
-            if ctype.endswith("*"):
-                ktype += "?"
+                ktype = ctype_to_kotlin(ctype)
+            else:
+                ktype = ctype_to_kotlin(ctype)
+                if ctype.endswith("*") and not ctype.startswith("char"):
+                    ktype += "?"
             params.append("{}: {}".format(pname, ktype))
     params = ", ".join(params)
     ctype, funcname = funcpart.split(" ", maxsplit=2)

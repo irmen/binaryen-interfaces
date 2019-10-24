@@ -114,13 +114,13 @@ interface Binaryen: Library {
     fun BinaryenFeatureAll(): BinaryenFeatures
     fun BinaryenModuleCreate(): BinaryenModuleRef
     fun BinaryenModuleDispose(module: BinaryenModuleRef)
-    fun BinaryenAddFunctionType(module: BinaryenModuleRef, name: String?, result: BinaryenType, paramTypes: IntArray?, numParams: BinaryenIndex): BinaryenFunctionTypeRef
-    fun BinaryenRemoveFunctionType(module: BinaryenModuleRef, name: String?)
+    fun BinaryenAddFunctionType(module: BinaryenModuleRef, name: String, result: BinaryenType, paramTypes: IntArray?, numParams: BinaryenIndex): BinaryenFunctionTypeRef
+    fun BinaryenRemoveFunctionType(module: BinaryenModuleRef, name: String)
     fun BinaryenLiteralInt32(x: Int): BinaryenLiteral
     fun BinaryenLiteralInt64(x: Long): BinaryenLiteral
     fun BinaryenLiteralFloat32(x: Float): BinaryenLiteral
     fun BinaryenLiteralFloat64(x: Double): BinaryenLiteral
-    fun BinaryenLiteralVec128(x: ByteArray?): BinaryenLiteral
+    fun BinaryenLiteralVec128(x: ByteArray): BinaryenLiteral
     fun BinaryenLiteralFloat32Bits(x: Int): BinaryenLiteral
     fun BinaryenLiteralFloat64Bits(x: Long): BinaryenLiteral
     fun BinaryenClzInt32(): BinaryenOp
@@ -431,20 +431,20 @@ interface Binaryen: Library {
     fun BinaryenWidenLowUVecI16x8ToVecI32x4(): BinaryenOp
     fun BinaryenWidenHighUVecI16x8ToVecI32x4(): BinaryenOp
     fun BinaryenSwizzleVec8x16(): BinaryenOp
-    fun BinaryenBlock(module: BinaryenModuleRef, name: String?, children: Array<BinaryenExpressionRef>?, numChildren: BinaryenIndex, type: BinaryenType): BinaryenExpressionRef
+    fun BinaryenBlock(module: BinaryenModuleRef, name: String, children: Array<BinaryenExpressionRef>?, numChildren: BinaryenIndex, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenIf(module: BinaryenModuleRef, condition: BinaryenExpressionRef, ifTrue: BinaryenExpressionRef, ifFalse: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenLoop(module: BinaryenModuleRef, `in`: String?, body: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenBreak(module: BinaryenModuleRef, name: String?, condition: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenSwitch(module: BinaryenModuleRef, names: Array<String>?, numNames: BinaryenIndex, defaultName: String?, condition: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenCall(module: BinaryenModuleRef, target: String?, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, returnType: BinaryenType): BinaryenExpressionRef
-    fun BinaryenCallIndirect(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, type: String?): BinaryenExpressionRef
-    fun BinaryenReturnCall(module: BinaryenModuleRef, target: String?, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, returnType: BinaryenType): BinaryenExpressionRef
-    fun BinaryenReturnCallIndirect(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, type: String?): BinaryenExpressionRef
+    fun BinaryenLoop(module: BinaryenModuleRef, `in`: String, body: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenBreak(module: BinaryenModuleRef, name: String, condition: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenSwitch(module: BinaryenModuleRef, names: Array<String>, numNames: BinaryenIndex, defaultName: String, condition: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenCall(module: BinaryenModuleRef, target: String, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, returnType: BinaryenType): BinaryenExpressionRef
+    fun BinaryenCallIndirect(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, type: String): BinaryenExpressionRef
+    fun BinaryenReturnCall(module: BinaryenModuleRef, target: String, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, returnType: BinaryenType): BinaryenExpressionRef
+    fun BinaryenReturnCallIndirect(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex, type: String): BinaryenExpressionRef
     fun BinaryenLocalGet(module: BinaryenModuleRef, index: BinaryenIndex, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenLocalSet(module: BinaryenModuleRef, index: BinaryenIndex, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenLocalTee(module: BinaryenModuleRef, index: BinaryenIndex, value: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenGlobalGet(module: BinaryenModuleRef, name: String?, type: BinaryenType): BinaryenExpressionRef
-    fun BinaryenGlobalSet(module: BinaryenModuleRef, name: String?, value: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenGlobalGet(module: BinaryenModuleRef, name: String, type: BinaryenType): BinaryenExpressionRef
+    fun BinaryenGlobalSet(module: BinaryenModuleRef, name: String, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenLoad(module: BinaryenModuleRef, bytes: Int, signed_: Byte, offset: Int, align: Int, type: BinaryenType, ptr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenStore(module: BinaryenModuleRef, bytes: Int, offset: Int, align: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenConst(module: BinaryenModuleRef, value: BinaryenLiteral): BinaryenExpressionRef
@@ -453,7 +453,7 @@ interface Binaryen: Library {
     fun BinaryenSelect(module: BinaryenModuleRef, condition: BinaryenExpressionRef, ifTrue: BinaryenExpressionRef, ifFalse: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenDrop(module: BinaryenModuleRef, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenReturn(module: BinaryenModuleRef, value: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenHost(module: BinaryenModuleRef, op: BinaryenOp, name: String?, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex): BinaryenExpressionRef
+    fun BinaryenHost(module: BinaryenModuleRef, op: BinaryenOp, name: String, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex): BinaryenExpressionRef
     fun BinaryenNop(module: BinaryenModuleRef): BinaryenExpressionRef
     fun BinaryenUnreachable(module: BinaryenModuleRef): BinaryenExpressionRef
     fun BinaryenAtomicLoad(module: BinaryenModuleRef, bytes: Int, offset: Int, type: BinaryenType, ptr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -465,7 +465,7 @@ interface Binaryen: Library {
     fun BinaryenAtomicFence(module: BinaryenModuleRef): BinaryenExpressionRef
     fun BinaryenSIMDExtract(module: BinaryenModuleRef, op: BinaryenOp, vec: BinaryenExpressionRef, index: Byte): BinaryenExpressionRef
     fun BinaryenSIMDReplace(module: BinaryenModuleRef, op: BinaryenOp, vec: BinaryenExpressionRef, index: Byte, value: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenSIMDShuffle(module: BinaryenModuleRef, left: BinaryenExpressionRef, right: BinaryenExpressionRef, mask: ByteArray?): BinaryenExpressionRef
+    fun BinaryenSIMDShuffle(module: BinaryenModuleRef, left: BinaryenExpressionRef, right: BinaryenExpressionRef, mask: ByteArray): BinaryenExpressionRef
     fun BinaryenSIMDTernary(module: BinaryenModuleRef, op: BinaryenOp, a: BinaryenExpressionRef, b: BinaryenExpressionRef, c: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSIMDShift(module: BinaryenModuleRef, op: BinaryenOp, vec: BinaryenExpressionRef, shift: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSIMDLoad(module: BinaryenModuleRef, op: BinaryenOp, offset: Int, align: Int, ptr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -474,9 +474,9 @@ interface Binaryen: Library {
     fun BinaryenMemoryCopy(module: BinaryenModuleRef, dest: BinaryenExpressionRef, source: BinaryenExpressionRef, size: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenMemoryFill(module: BinaryenModuleRef, dest: BinaryenExpressionRef, value: BinaryenExpressionRef, size: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenTry(module: BinaryenModuleRef, body: BinaryenExpressionRef, catchBody: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenThrow(module: BinaryenModuleRef, event: String?, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex): BinaryenExpressionRef
+    fun BinaryenThrow(module: BinaryenModuleRef, event: String, operands: Array<BinaryenExpressionRef>?, numOperands: BinaryenIndex): BinaryenExpressionRef
     fun BinaryenRethrow(module: BinaryenModuleRef, exnref: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenBrOnExn(module: BinaryenModuleRef, name: String?, eventName: String?, exnref: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenBrOnExn(module: BinaryenModuleRef, name: String, eventName: String, exnref: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenPush(module: BinaryenModuleRef, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenPop(module: BinaryenModuleRef, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenExpressionGetId(expr: BinaryenExpressionRef): BinaryenExpressionId
@@ -603,32 +603,32 @@ interface Binaryen: Library {
     fun BinaryenBrOnExnGetName(expr: BinaryenExpressionRef): String
     fun BinaryenBrOnExnGetExnref(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenPushGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenAddFunction(module: BinaryenModuleRef, name: String?, type: BinaryenFunctionTypeRef, varTypes: IntArray?, numVarTypes: BinaryenIndex, body: BinaryenExpressionRef): BinaryenFunctionRef
-    fun BinaryenGetFunction(module: BinaryenModuleRef, name: String?): BinaryenFunctionRef
-    fun BinaryenRemoveFunction(module: BinaryenModuleRef, name: String?)
-    fun BinaryenAddFunctionImport(module: BinaryenModuleRef, internalName: String?, externalModuleName: String?, externalBaseName: String?, functionType: BinaryenFunctionTypeRef)
-    fun BinaryenAddTableImport(module: BinaryenModuleRef, internalName: String?, externalModuleName: String?, externalBaseName: String?)
-    fun BinaryenAddMemoryImport(module: BinaryenModuleRef, internalName: String?, externalModuleName: String?, externalBaseName: String?, shared: Byte)
-    fun BinaryenAddGlobalImport(module: BinaryenModuleRef, internalName: String?, externalModuleName: String?, externalBaseName: String?, globalType: BinaryenType, mutable_: Int)
-    fun BinaryenAddEventImport(module: BinaryenModuleRef, internalName: String?, externalModuleName: String?, externalBaseName: String?, attribute: Int, eventType: BinaryenFunctionTypeRef)
-    fun BinaryenAddFunctionExport(module: BinaryenModuleRef, internalName: String?, externalName: String?): BinaryenExportRef
-    fun BinaryenAddTableExport(module: BinaryenModuleRef, internalName: String?, externalName: String?): BinaryenExportRef
-    fun BinaryenAddMemoryExport(module: BinaryenModuleRef, internalName: String?, externalName: String?): BinaryenExportRef
-    fun BinaryenAddGlobalExport(module: BinaryenModuleRef, internalName: String?, externalName: String?): BinaryenExportRef
-    fun BinaryenAddEventExport(module: BinaryenModuleRef, internalName: String?, externalName: String?): BinaryenExportRef
-    fun BinaryenRemoveExport(module: BinaryenModuleRef, externalName: String?)
-    fun BinaryenAddGlobal(module: BinaryenModuleRef, name: String?, type: BinaryenType, mutable_: Byte, init: BinaryenExpressionRef): BinaryenGlobalRef
-    fun BinaryenGetGlobal(module: BinaryenModuleRef, name: String?): BinaryenGlobalRef
-    fun BinaryenRemoveGlobal(module: BinaryenModuleRef, name: String?)
-    fun BinaryenAddEvent(module: BinaryenModuleRef, name: String?, attribute: Int, type: BinaryenFunctionTypeRef): BinaryenEventRef
-    fun BinaryenGetEvent(module: BinaryenModuleRef, name: String?): BinaryenEventRef
-    fun BinaryenRemoveEvent(module: BinaryenModuleRef, name: String?)
-    fun BinaryenSetFunctionTable(module: BinaryenModuleRef, initial: BinaryenIndex, maximum: BinaryenIndex, funcNames: Array<String>?, numFuncNames: BinaryenIndex, offset: BinaryenExpressionRef)
-    fun BinaryenSetMemory(module: BinaryenModuleRef, initial: BinaryenIndex, maximum: BinaryenIndex, exportName: String?, segments: Array<String>?, segmentPassive: ByteArray?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: IntArray?, numSegments: BinaryenIndex, shared: Byte)
+    fun BinaryenAddFunction(module: BinaryenModuleRef, name: String, type: BinaryenFunctionTypeRef, varTypes: IntArray?, numVarTypes: BinaryenIndex, body: BinaryenExpressionRef): BinaryenFunctionRef
+    fun BinaryenGetFunction(module: BinaryenModuleRef, name: String): BinaryenFunctionRef
+    fun BinaryenRemoveFunction(module: BinaryenModuleRef, name: String)
+    fun BinaryenAddFunctionImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String, functionType: BinaryenFunctionTypeRef)
+    fun BinaryenAddTableImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String)
+    fun BinaryenAddMemoryImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String, shared: Byte)
+    fun BinaryenAddGlobalImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String, globalType: BinaryenType, mutable_: Int)
+    fun BinaryenAddEventImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String, attribute: Int, eventType: BinaryenFunctionTypeRef)
+    fun BinaryenAddFunctionExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
+    fun BinaryenAddTableExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
+    fun BinaryenAddMemoryExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
+    fun BinaryenAddGlobalExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
+    fun BinaryenAddEventExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
+    fun BinaryenRemoveExport(module: BinaryenModuleRef, externalName: String)
+    fun BinaryenAddGlobal(module: BinaryenModuleRef, name: String, type: BinaryenType, mutable_: Byte, init: BinaryenExpressionRef): BinaryenGlobalRef
+    fun BinaryenGetGlobal(module: BinaryenModuleRef, name: String): BinaryenGlobalRef
+    fun BinaryenRemoveGlobal(module: BinaryenModuleRef, name: String)
+    fun BinaryenAddEvent(module: BinaryenModuleRef, name: String, attribute: Int, type: BinaryenFunctionTypeRef): BinaryenEventRef
+    fun BinaryenGetEvent(module: BinaryenModuleRef, name: String): BinaryenEventRef
+    fun BinaryenRemoveEvent(module: BinaryenModuleRef, name: String)
+    fun BinaryenSetFunctionTable(module: BinaryenModuleRef, initial: BinaryenIndex, maximum: BinaryenIndex, funcNames: Array<String>, numFuncNames: BinaryenIndex, offset: BinaryenExpressionRef)
+    fun BinaryenSetMemory(module: BinaryenModuleRef, initial: BinaryenIndex, maximum: BinaryenIndex, exportName: String, segments: Array<String>, segmentPassive: ByteArray?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: IntArray?, numSegments: BinaryenIndex, shared: Byte)
     fun BinaryenSetStart(module: BinaryenModuleRef, start: BinaryenFunctionRef)
     fun BinaryenModuleGetFeatures(module: BinaryenModuleRef): BinaryenFeatures
     fun BinaryenModuleSetFeatures(module: BinaryenModuleRef, features: BinaryenFeatures)
-    fun BinaryenModuleParse(text: String?): BinaryenModuleRef
+    fun BinaryenModuleParse(text: String): BinaryenModuleRef
     fun BinaryenModulePrint(module: BinaryenModuleRef)
     fun BinaryenModulePrintAsmjs(module: BinaryenModuleRef)
     fun BinaryenModuleValidate(module: BinaryenModuleRef): Int
@@ -639,16 +639,16 @@ interface Binaryen: Library {
     fun BinaryenSetShrinkLevel(level: Int)
     fun BinaryenGetDebugInfo(): Int
     fun BinaryenSetDebugInfo(on: Int)
-    fun BinaryenModuleRunPasses(module: BinaryenModuleRef, passes: Array<String>?, numPasses: BinaryenIndex)
+    fun BinaryenModuleRunPasses(module: BinaryenModuleRef, passes: Array<String>, numPasses: BinaryenIndex)
     fun BinaryenModuleAutoDrop(module: BinaryenModuleRef)
-    fun BinaryenModuleWrite(module: BinaryenModuleRef, output: String?, outputSize: Int): Int
-    fun BinaryenModuleWriteText(module: BinaryenModuleRef, output: String?, outputSize: Int): Int
-    fun BinaryenModuleWriteWithSourceMap(module: BinaryenModuleRef, url: String?, output: String?, outputSize: Int, sourceMap: String?, sourceMapSize: Int): BinaryenBufferSizes
-    fun BinaryenModuleAllocateAndWrite(module: BinaryenModuleRef, sourceMapUrl: String?): BinaryenModuleAllocateAndWriteResult
+    fun BinaryenModuleWrite(module: BinaryenModuleRef, output: String, outputSize: Int): Int
+    fun BinaryenModuleWriteText(module: BinaryenModuleRef, output: String, outputSize: Int): Int
+    fun BinaryenModuleWriteWithSourceMap(module: BinaryenModuleRef, url: String, output: String, outputSize: Int, sourceMap: String, sourceMapSize: Int): BinaryenBufferSizes
+    fun BinaryenModuleAllocateAndWrite(module: BinaryenModuleRef, sourceMapUrl: String): BinaryenModuleAllocateAndWriteResult
     fun BinaryenModuleAllocateAndWriteText(module: Array<BinaryenModuleRef>?): String
-    fun BinaryenModuleRead(input: String?, inputSize: Int): BinaryenModuleRef
+    fun BinaryenModuleRead(input: String, inputSize: Int): BinaryenModuleRef
     fun BinaryenModuleInterpret(module: BinaryenModuleRef)
-    fun BinaryenModuleAddDebugInfoFileName(module: BinaryenModuleRef, filename: String?): BinaryenIndex
+    fun BinaryenModuleAddDebugInfoFileName(module: BinaryenModuleRef, filename: String): BinaryenIndex
     fun BinaryenModuleGetDebugInfoFileName(module: BinaryenModuleRef, index: BinaryenIndex): String
     fun BinaryenFunctionTypeGetName(ftype: BinaryenFunctionTypeRef): String
     fun BinaryenFunctionTypeGetNumParams(ftype: BinaryenFunctionTypeRef): BinaryenIndex
@@ -663,7 +663,7 @@ interface Binaryen: Library {
     fun BinaryenFunctionGetVar(func: BinaryenFunctionRef, index: BinaryenIndex): BinaryenType
     fun BinaryenFunctionGetBody(func: BinaryenFunctionRef): BinaryenExpressionRef
     fun BinaryenFunctionOptimize(func: BinaryenFunctionRef, module: BinaryenModuleRef)
-    fun BinaryenFunctionRunPasses(func: BinaryenFunctionRef, module: BinaryenModuleRef, passes: Array<String>?, numPasses: BinaryenIndex)
+    fun BinaryenFunctionRunPasses(func: BinaryenFunctionRef, module: BinaryenModuleRef, passes: Array<String>, numPasses: BinaryenIndex)
     fun BinaryenFunctionSetDebugLocation(func: BinaryenFunctionRef, expr: BinaryenExpressionRef, fileIndex: BinaryenIndex, lineNumber: BinaryenIndex, columnNumber: BinaryenIndex)
     fun BinaryenGlobalGetName(global: BinaryenGlobalRef): String
     fun BinaryenGlobalGetType(global: BinaryenGlobalRef): BinaryenType
@@ -683,7 +683,7 @@ interface Binaryen: Library {
     fun BinaryenExportGetKind(export_: BinaryenExportRef): BinaryenExternalKind
     fun BinaryenExportGetName(export_: BinaryenExportRef): String
     fun BinaryenExportGetValue(export_: BinaryenExportRef): String
-    fun BinaryenAddCustomSection(module: BinaryenModuleRef, name: String?, contents: String?, contentsSize: BinaryenIndex)
+    fun BinaryenAddCustomSection(module: BinaryenModuleRef, name: String, contents: String, contentsSize: BinaryenIndex)
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperAddBlock(relooper: RelooperRef, code: BinaryenExpressionRef): RelooperBlockRef
     fun RelooperAddBranch(from: RelooperBlockRef, to: RelooperBlockRef, condition: BinaryenExpressionRef, code: BinaryenExpressionRef)
