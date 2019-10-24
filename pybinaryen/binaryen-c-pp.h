@@ -78,8 +78,7 @@ typedef void* BinaryenModuleRef;
  BinaryenModuleRef BinaryenModuleCreate(void);
  void BinaryenModuleDispose(BinaryenModuleRef module);
 typedef void* BinaryenFunctionTypeRef;
- BinaryenFunctionTypeRef
-BinaryenAddFunctionType(BinaryenModuleRef module,
+ BinaryenFunctionTypeRef BinaryenAddFunctionType(BinaryenModuleRef module,
                         const char* name,
                         BinaryenType result,
                         BinaryenType* paramTypes,
