@@ -33,27 +33,7 @@ fun main() {
             derp()
         }
     }
+
     System.out.flush()
     println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-    println("TIME(ms)= $time")
-
 }
