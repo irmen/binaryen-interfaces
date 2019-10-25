@@ -1,11 +1,11 @@
-package razorvine.kbinaryen
+import kotlin.test.*
+import razorvine.kbinaryen.*
 
-import kotlin.system.measureTimeMillis
+class BinaryenBasicTests {
 
-fun main() {
-    val b = Binaryen.INSTANCE
-
-    fun derp () {
+    @Test
+    fun testBasics() {
+        val b = Binaryen.INSTANCE
         val module: BinaryenModuleRef = b.BinaryenModuleCreate()
 
         // Create a function type for  i32 (i32, i32)
@@ -28,13 +28,4 @@ fun main() {
         // Clean up the module, which owns all the objects we created above
         b.BinaryenModuleDispose(module);
     }
-
-    val time = measureTimeMillis {
-        repeat(1000) {
-            derp()
-        }
-    }
-
-    System.out.flush()
-    println("TIME(ms)= $time")
 }
