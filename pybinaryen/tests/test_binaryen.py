@@ -3,6 +3,16 @@ import binaryen
 
 
 class TestBinaryen(unittest.TestCase):
+    def setUp(self):
+        binaryen.SetColorsEnabled(False)
+
+    def test_minimal(self):
+        module = binaryen.ModuleCreate()
+        wasmt_cffi = binaryen.ModuleAllocateAndWriteText(module)
+        wasmt = binaryen.ffi.string(wasmt_cffi)
+        binaryen.ModuleDispose(module)
+        self.assertEqual(b"(module\n)\n", wasmt)
+
     def test_basic(self):
         module = binaryen.ModuleCreate()
         params = [binaryen.TypeInt32(), binaryen.TypeInt32()]

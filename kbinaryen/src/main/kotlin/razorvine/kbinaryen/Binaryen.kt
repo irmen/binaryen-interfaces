@@ -645,7 +645,7 @@ interface Binaryen: Library {
     fun BinaryenModuleWriteText(module: BinaryenModuleRef, output: String, outputSize: Int): Int
     fun BinaryenModuleWriteWithSourceMap(module: BinaryenModuleRef, url: String, output: String, outputSize: Int, sourceMap: String, sourceMapSize: Int): BinaryenBufferSizes
     fun BinaryenModuleAllocateAndWrite(module: BinaryenModuleRef, sourceMapUrl: String): BinaryenModuleAllocateAndWriteResult
-    fun BinaryenModuleAllocateAndWriteText(module: Array<BinaryenModuleRef>?): String
+    fun BinaryenModuleAllocateAndWriteText(module: BinaryenModuleRef): String
     fun BinaryenModuleRead(input: String, inputSize: Int): BinaryenModuleRef
     fun BinaryenModuleInterpret(module: BinaryenModuleRef)
     fun BinaryenModuleAddDebugInfoFileName(module: BinaryenModuleRef, filename: String): BinaryenIndex
