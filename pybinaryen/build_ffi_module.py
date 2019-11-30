@@ -10,9 +10,9 @@ def parse_header_file():
     if not os.path.isfile(header_location):
         header_location = "/usr/local/include/binaryen-c.h"
         if not os.path.isfile(header_location):
-            print("(Can't find system installed version, using prepackaged version)")
-            header_location = "binaryen-c-pp.h"
-            usesysteminstalled = False
+            raise FileNotFoundError("Can't find the header file")
+            # header_location = "binaryen-c-pp.h"
+            # usesysteminstalled = False
 
     if usesysteminstalled:
         print("(Using system installed version)")
