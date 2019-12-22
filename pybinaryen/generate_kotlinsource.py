@@ -1,26 +1,17 @@
+import inspect
 from build_ffi_module import parse_header_file
-
-print("""
-// ---------------------- KOTLIN SOURCE -----------------
-import com.sun.jna.Library
-import com.sun.jna.Native
-import com.sun.jna.Platform
-import com.sun.jna.Pointer
-import com.sun.jna.Structure
-
-""")
-print("// typealiases:")
-headerlines = parse_header_file()[0].splitlines()
+import binaryen
 
 
 def ctype_to_kotlin(ctype):
+    ctype = ctype.strip()
     if ctype == "void*":
         return "Pointer"
-    elif ctype == "char*":
+    elif ctype in ("char*", "char *", "const char*", "const char *"):
         return "String"
     elif ctype == "char**":
         return "Array<String>"
-    elif ctype in ("int", "size_t", "uint32_t", "int32_t"):
+    elif ctype in ("int", "size_t", "uint32_t", "int32_t", "BinaryenIndex"):
         return "Int"
     elif ctype in ("uint64_t", "int64_t"):
         return "Long"
@@ -41,99 +32,122 @@ def ctype_to_kotlin(ctype):
     elif ctype.startswith(("Binary", "Relooper")):
         return ctype
     else:
-        raise NotImplementedError("ctype: "+ctype)
+        raise NotImplementedError("ctype: '"+ctype+"'")
 
 
-def process_struct(line, lines, output):
-    _, _, name = line.partition("struct")
-    if name.endswith("{"):
-        name = name[:-1].strip()
-    if output:
-        print("class {}: Structure()".format(name))
-    braces_count = 1
-    while braces_count > 0:
-        line = next(lines)
-        if "{" in line:
-            braces_count += 1
-        if "}" in line:
-            braces_count -= 1
-
-
-def process_function(line):
-    if line.startswith("struct "):
-        line = line[7:]
-    funcpart, _, paramspart = line.partition("(")
-    paramsstrs = paramspart[:-2].split(",")
-    if paramsstrs in ([], [""], ["void"]):
-        params = []
-    else:
-        params = []
-        for p in paramsstrs:
-            p = p.strip()
-            if p.startswith("struct "):
-                p = p[7:]
-            ctype, pname = p.split()
-            if pname == "in":
-                pname = "`in`"
-            if "[" in pname:
-                pname, _, _ = pname.partition("[")
-                ctype += "*"
-                ktype = ctype_to_kotlin(ctype)
+def create_typedefs(headerlines):
+    for line in headerlines:
+        words = line.split()
+        if words[0] == "struct" and words[2] == "{":
+            print("class {}: Structure()".format(words[1]))
+        elif words[0] == "typedef":
+            if words[1] == "struct":
+                if words[2].endswith("*"):
+                    typename = words[3].rstrip(";")
+                    print("typealias", typename, "= Pointer")
+                elif words[3] == "{":
+                    print("class {}: Structure()".format(words[2]))
             else:
-                ktype = ctype_to_kotlin(ctype)
-                if ctype.endswith("*") and not ctype.startswith("char"):
-                    ktype += "?"
-            params.append("{}: {}".format(pname, ktype))
-    params = ", ".join(params)
-    ctype, funcname = funcpart.split(" ", maxsplit=2)
-    ktype = ctype_to_kotlin(ctype)
-    if ktype:
-        print("fun {}({}): {}".format(funcname, params, ktype))
-    else:
-        print("fun {}({})".format(funcname, params))
+                ctype = ctype_to_kotlin(words[1])
+                typename = words[2].rstrip(";")
+                print("typealias", typename, "=", ctype)
 
 
-lines = iter(headerlines)
-try:
+def create_kotlin():
+    headerlines = parse_header_file()[0].splitlines()
+    print("""
+// ---------------------- KOTLIN SOURCE -----------------
+import com.sun.jna.Library
+import com.sun.jna.Native
+import com.sun.jna.Platform
+import com.sun.jna.Pointer
+import com.sun.jna.Structure
+
+// typealiases:""")
+    create_typedefs(headerlines)
+
+    print("\n// functions:")
+
+    functions = inspect.getmembers(binaryen.lib, inspect.isroutine)
+    for name, func in functions:
+        args, result = signature(name, func, headerlines)
+        if result:
+            print("fun {}({}): {}".format(name, args, result))
+        else:
+            print("fun {}({})".format(name, args))
+
+
+def func_from_header(name, headerlines):
+    lines = iter(headerlines)
+    search = name+"("
+    funclines = []
+    previous_line = ""
     while True:
         line = next(lines)
-        if line.startswith("struct") and line.endswith("{"):
-            _, name, _ = line.split(" ")
-            print("class {}: Structure()".format(name))
-            while "}" not in line:
-                line = next(lines)
-        elif line.startswith("typedef"):
-            if "struct" in line:
-                process_struct(line, lines, True)
-            else:
-                _, ctype, name = line.split(" ")
-                name = name[:-1]
-                print("typealias {} = {}".format(name, ctype_to_kotlin(ctype)))
-except StopIteration:
-    pass
-print("\n")
-
-
-lines = iter(headerlines)
-try:
-    while True:
-        line = next(lines)
-        line = line.replace("const ", "").strip()
-        if (line.startswith("struct") and "{" not in line) or ("(" in line):
+        if line.startswith(search):
+            # the return type is on the previous line.
+            line = previous_line + " " + line
+        if search in line:
+            line = line.strip()
+            funclines.append(line)
             while not line.endswith(";"):
-                contline = next(lines)
-                contline = contline.replace("const ", "").strip()
-                line += contline
-            process_function(line)
-        elif "struct" in line:
-            process_struct(line, lines, False)
-        elif not line.startswith("typedef"):
-                line += " "
-                while not line.endswith(";"):
-                    contline = next(lines)
-                    contline = contline.replace("const ", "").strip()
-                    line += contline
-                process_function(line)
-except StopIteration:
-    pass
-print("\n")
+                line = next(lines)
+                funclines.append(line.strip())
+            break
+        previous_line = line
+    return funclines
+
+
+def get_param_name_and_ctype(hparam):
+    hparam = hparam.replace("const ", "")
+    ptype, name = hparam.rsplit(" ", 1)
+    ptype = ptype.strip()
+    name = name.split("[")[0].strip()
+    if name == "in":
+        name = "`{}`".format(name)
+    if ptype.startswith("struct"):
+        ptype = ptype[6:].lstrip()
+    return name, ptype
+
+
+def signature(funcname, func, headerlines):
+    ctype = binaryen.ffi.typeof(func)
+    if ctype.kind != "function":
+        raise TypeError("expected function")
+    lines = func_from_header(funcname, headerlines)
+    cargs = ctype.args
+    argspec = ""
+    if cargs:
+        funcsource = " ".join(lines)
+        open_paren = funcsource.index("(")
+        close_paren = funcsource.index(")")
+        header_params = funcsource[open_paren+1:close_paren].split(",")
+        if len(header_params) != len(cargs):
+            raise ValueError("invalid number of args in header")
+        kotlin_params = []
+        for hparam in header_params:
+            param_name, param_ctype = get_param_name_and_ctype(hparam)
+            param_ktype = ctype_to_kotlin(param_ctype)
+            if param_ctype.endswith("*") and not param_ctype.startswith("char"):
+                param_ktype += "?"
+            karg = "{}: {}".format(param_name, param_ktype)
+            kotlin_params.append(karg)
+        argspec = ", ".join(kotlin_params)
+    cresult = ctype.result
+    resultspec = ""
+    if cresult.cname != "void":
+        if cresult.kind == "primitive":
+            hctype = lines[0].partition(funcname+"(")[0]
+            resultspec = ctype_to_kotlin(hctype)
+        elif cresult.kind in ("struct", "pointer"):
+            hctype = lines[0].partition(funcname+"(")[0]
+            if hctype.startswith("struct"):
+                hctype = hctype[6:].lstrip()
+            resultspec = ctype_to_kotlin(hctype)
+        else:
+            raise NotImplementedError("strange cresult kind", cresult.kind)
+    return argspec, resultspec
+
+
+if __name__ == "__main__":
+    create_kotlin()

@@ -19,8 +19,8 @@ val b = Binaryen.INSTANCE
 val module: BinaryenModuleRef = b.BinaryenModuleCreate()
 
 // Create a function type for  i32 (i32, i32)
-val params = arrayOf(b.BinaryenTypeInt32(), b.BinaryenTypeInt32()).toIntArray()
-val iii: BinaryenFunctionTypeRef = b.BinaryenAddFunctionType(module, "iii", b.BinaryenTypeInt32(), params, 2);
+val params = b.BinaryenTypeCreate(arrayOf(b.BinaryenTypeInt32(), b.BinaryenTypeInt32()).toIntArray(), 2)
+val results = b.BinaryenTypeInt32()
 
 // Get the 0 and 1 arguments, and add them
 val x: BinaryenExpressionRef = b.BinaryenLocalGet(module, 0, b.BinaryenTypeInt32())
@@ -30,20 +30,20 @@ val add: BinaryenExpressionRef = b.BinaryenBinary(module, b.BinaryenAddInt32(), 
 // Create the add function
 // Note: no additional local variables
 // Note: no basic blocks here, we are an AST. The function body is just an expression node.
-val adder: BinaryenFunctionRef = b.BinaryenAddFunction(module, "adder", iii, null, 0, add);
+val adder: BinaryenFunctionRef = b.BinaryenAddFunction(module, "adder", params, results, null, 0, add)
 
 // Print it out
-b.BinaryenModulePrint(module);
+b.BinaryenModulePrint(module)
 
 // Clean up the module, which owns all the objects we created above
-b.BinaryenModuleDispose(module);
+b.BinaryenModuleDispose(module)
 ```
 
 results in the following Webasm Text output:
 ```
 (module
- (type $iii (func (param i32 i32) (result i32)))
- (func $adder (; 0 ;) (type $iii) (param $0 i32) (param $1 i32) (result i32)
+ (type $i32_i32_=>_i32 (func (param i32 i32) (result i32)))
+ (func $adder (; 0 ;) (param $0 i32) (param $1 i32) (result i32)
   (i32.add
    (local.get $0)
    (local.get $1)
