@@ -22,9 +22,9 @@ typealias BinaryenGlobalRef = Pointer
 typealias BinaryenEventRef = Pointer
 class BinaryenBufferSizes: Structure()
 class BinaryenModuleAllocateAndWriteResult: Structure()
+typealias BinaryenSideEffects = Int
 typealias RelooperRef = Pointer
 typealias RelooperBlockRef = Pointer
-
 
 
 interface Binaryen: Library {
@@ -159,6 +159,7 @@ interface Binaryen: Library {
     fun BinaryenCallIndirectId(): BinaryenExpressionId
     fun BinaryenCeilFloat32(): BinaryenOp
     fun BinaryenCeilFloat64(): BinaryenOp
+    fun BinaryenClearPassArguments()
     fun BinaryenClzInt32(): BinaryenOp
     fun BinaryenClzInt64(): BinaryenOp
     fun BinaryenConst(module: BinaryenModuleRef, value: BinaryenLiteral): BinaryenExpressionRef
@@ -224,6 +225,7 @@ interface Binaryen: Library {
     fun BinaryenExportGetName(export_: BinaryenExportRef): String
     fun BinaryenExportGetValue(export_: BinaryenExportRef): String
     fun BinaryenExpressionGetId(expr: BinaryenExpressionRef): BinaryenExpressionId
+    fun BinaryenExpressionGetSideEffects(expr: BinaryenExpressionRef, features: BinaryenFeatures): BinaryenSideEffects
     fun BinaryenExpressionGetType(expr: BinaryenExpressionRef): BinaryenType
     fun BinaryenExpressionPrint(expr: BinaryenExpressionRef)
     fun BinaryenExtendS16Int32(): BinaryenOp
@@ -251,6 +253,7 @@ interface Binaryen: Library {
     fun BinaryenFeatureBulkMemory(): BinaryenFeatures
     fun BinaryenFeatureExceptionHandling(): BinaryenFeatures
     fun BinaryenFeatureMVP(): BinaryenFeatures
+    fun BinaryenFeatureMultivalue(): BinaryenFeatures
     fun BinaryenFeatureMutableGlobals(): BinaryenFeatures
     fun BinaryenFeatureNontrappingFPToInt(): BinaryenFeatures
     fun BinaryenFeatureReferenceTypes(): BinaryenFeatures
@@ -284,18 +287,28 @@ interface Binaryen: Library {
     fun BinaryenGeUVecI8x16(): BinaryenOp
     fun BinaryenGeVecF32x4(): BinaryenOp
     fun BinaryenGeVecF64x2(): BinaryenOp
+    fun BinaryenGetAlwaysInlineMaxSize(): Int
     fun BinaryenGetDebugInfo(): Int
     fun BinaryenGetEvent(module: BinaryenModuleRef, name: String): BinaryenEventRef
     fun BinaryenGetExportByIndex(module: BinaryenModuleRef, id: Int): BinaryenExportRef
+    fun BinaryenGetFlexibleInlineMaxSize(): Int
     fun BinaryenGetFunction(module: BinaryenModuleRef, name: String): BinaryenFunctionRef
     fun BinaryenGetFunctionByIndex(module: BinaryenModuleRef, id: Int): BinaryenFunctionRef
+    fun BinaryenGetFunctionTableSegmentData(module: BinaryenModuleRef, segmentId: Int, dataId: Int): String
+    fun BinaryenGetFunctionTableSegmentLength(module: BinaryenModuleRef, segmentId: Int): Int
+    fun BinaryenGetFunctionTableSegmentOffset(module: BinaryenModuleRef, segmentId: Int): BinaryenExpressionRef
     fun BinaryenGetGlobal(module: BinaryenModuleRef, name: String): BinaryenGlobalRef
+    fun BinaryenGetLowMemoryUnused(): Int
     fun BinaryenGetMemorySegmentByteLength(module: BinaryenModuleRef, id: Int): Int
     fun BinaryenGetMemorySegmentByteOffset(module: BinaryenModuleRef, id: Int): Int
+    fun BinaryenGetMemorySegmentPassive(module: BinaryenModuleRef, id: Int): Int
     fun BinaryenGetNumExports(module: BinaryenModuleRef): Int
+    fun BinaryenGetNumFunctionTableSegments(module: BinaryenModuleRef): Int
     fun BinaryenGetNumFunctions(module: BinaryenModuleRef): Int
     fun BinaryenGetNumMemorySegments(module: BinaryenModuleRef): Int
+    fun BinaryenGetOneCallerInlineMaxSize(): Int
     fun BinaryenGetOptimizeLevel(): Int
+    fun BinaryenGetPassArgument(name: String): String
     fun BinaryenGetShrinkLevel(): Int
     fun BinaryenGlobalGet(module: BinaryenModuleRef, name: String, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenGlobalGetGetName(expr: BinaryenExpressionRef): String
@@ -336,6 +349,7 @@ interface Binaryen: Library {
     fun BinaryenIfGetIfTrue(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenIfId(): BinaryenExpressionId
     fun BinaryenInvalidId(): BinaryenExpressionId
+    fun BinaryenIsFunctionTableImported(module: BinaryenModuleRef): Int
     fun BinaryenLeFloat32(): BinaryenOp
     fun BinaryenLeFloat64(): BinaryenOp
     fun BinaryenLeSInt32(): BinaryenOp
@@ -587,11 +601,16 @@ interface Binaryen: Library {
     fun BinaryenSelectGetIfTrue(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSelectId(): BinaryenExpressionId
     fun BinaryenSetAPITracing(on: Int)
+    fun BinaryenSetAlwaysInlineMaxSize(size: Int)
     fun BinaryenSetColorsEnabled(enabled: Int)
     fun BinaryenSetDebugInfo(on: Int)
+    fun BinaryenSetFlexibleInlineMaxSize(size: Int)
     fun BinaryenSetFunctionTable(module: BinaryenModuleRef, initial: Int, maximum: Int, funcNames: Array<String>, numFuncNames: Int, offset: BinaryenExpressionRef)
+    fun BinaryenSetLowMemoryUnused(on: Int)
     fun BinaryenSetMemory(module: BinaryenModuleRef, initial: Int, maximum: Int, exportName: String, segments: Array<String>, segmentPassive: ByteArray?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: IntArray?, numSegments: Int, shared: Byte)
+    fun BinaryenSetOneCallerInlineMaxSize(size: Int)
     fun BinaryenSetOptimizeLevel(level: Int)
+    fun BinaryenSetPassArgument(name: String, value: String)
     fun BinaryenSetShrinkLevel(level: Int)
     fun BinaryenSetStart(module: BinaryenModuleRef, start: BinaryenFunctionRef)
     fun BinaryenShlInt32(): BinaryenOp
@@ -612,6 +631,19 @@ interface Binaryen: Library {
     fun BinaryenShrUVecI32x4(): BinaryenOp
     fun BinaryenShrUVecI64x2(): BinaryenOp
     fun BinaryenShrUVecI8x16(): BinaryenOp
+    fun BinaryenSideEffectAny(): BinaryenSideEffects
+    fun BinaryenSideEffectBranches(): BinaryenSideEffects
+    fun BinaryenSideEffectCalls(): BinaryenSideEffects
+    fun BinaryenSideEffectImplicitTrap(): BinaryenSideEffects
+    fun BinaryenSideEffectIsAtomic(): BinaryenSideEffects
+    fun BinaryenSideEffectNone(): BinaryenSideEffects
+    fun BinaryenSideEffectReadsGlobal(): BinaryenSideEffects
+    fun BinaryenSideEffectReadsLocal(): BinaryenSideEffects
+    fun BinaryenSideEffectReadsMemory(): BinaryenSideEffects
+    fun BinaryenSideEffectThrows(): BinaryenSideEffects
+    fun BinaryenSideEffectWritesGlobal(): BinaryenSideEffects
+    fun BinaryenSideEffectWritesLocal(): BinaryenSideEffects
+    fun BinaryenSideEffectWritesMemory(): BinaryenSideEffects
     fun BinaryenSplatVecF32x4(): BinaryenOp
     fun BinaryenSplatVecF64x2(): BinaryenOp
     fun BinaryenSplatVecI16x8(): BinaryenOp
@@ -723,3 +755,5 @@ interface Binaryen: Library {
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperRenderAndDispose(relooper: RelooperRef, entry: RelooperBlockRef, labelHelper: Int): BinaryenExpressionRef
 }
+
+
