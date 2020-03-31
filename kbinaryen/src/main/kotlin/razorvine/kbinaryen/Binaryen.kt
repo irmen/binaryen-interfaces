@@ -48,6 +48,9 @@ interface Binaryen: Library {
     fun BinaryenAbsFloat64(): BinaryenOp
     fun BinaryenAbsVecF32x4(): BinaryenOp
     fun BinaryenAbsVecF64x2(): BinaryenOp
+    fun BinaryenAbsVecI16x8(): BinaryenOp
+    fun BinaryenAbsVecI32x4(): BinaryenOp
+    fun BinaryenAbsVecI8x16(): BinaryenOp
     fun BinaryenAddCustomSection(module: BinaryenModuleRef, name: String, contents: String, contentsSize: Int)
     fun BinaryenAddEvent(module: BinaryenModuleRef, name: String, attribute: Int, params: BinaryenType, results: BinaryenType): BinaryenEventRef
     fun BinaryenAddEventExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
@@ -131,6 +134,9 @@ interface Binaryen: Library {
     fun BinaryenBinaryGetOp(expr: BinaryenExpressionRef): BinaryenOp
     fun BinaryenBinaryGetRight(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenBinaryId(): BinaryenExpressionId
+    fun BinaryenBitmaskVecI16x8(): BinaryenOp
+    fun BinaryenBitmaskVecI32x4(): BinaryenOp
+    fun BinaryenBitmaskVecI8x16(): BinaryenOp
     fun BinaryenBitselectVec128(): BinaryenOp
     fun BinaryenBlock(module: BinaryenModuleRef, name: String, children: Array<BinaryenExpressionRef>?, numChildren: Int, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenBlockGetChild(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
@@ -715,6 +721,14 @@ interface Binaryen: Library {
     fun BinaryenTryGetBody(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenTryGetCatchBody(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenTryId(): BinaryenExpressionId
+    fun BinaryenTupleExtract(module: BinaryenModuleRef, tuple: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
+    fun BinaryenTupleExtractGetIndex(expr: BinaryenExpressionRef): Int
+    fun BinaryenTupleExtractGetTuple(expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTupleExtractId(): BinaryenExpressionId
+    fun BinaryenTupleMake(module: BinaryenModuleRef, operands: Array<BinaryenExpressionRef>?, numOperands: Int): BinaryenExpressionRef
+    fun BinaryenTupleMakeGetNumOperands(expr: BinaryenExpressionRef): Int
+    fun BinaryenTupleMakeGetOperand(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
+    fun BinaryenTupleMakeId(): BinaryenExpressionId
     fun BinaryenTypeAnyref(): BinaryenType
     fun BinaryenTypeArity(t: BinaryenType): Int
     fun BinaryenTypeAuto(): BinaryenType
@@ -754,6 +768,5 @@ interface Binaryen: Library {
     fun RelooperAddBranchForSwitch(from: RelooperBlockRef, to: RelooperBlockRef, indexes: IntArray?, numIndexes: Int, code: BinaryenExpressionRef)
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperRenderAndDispose(relooper: RelooperRef, entry: RelooperBlockRef, labelHelper: Int): BinaryenExpressionRef
+
 }
-
-
