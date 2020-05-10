@@ -8,7 +8,7 @@ import com.sun.jna.Structure
 
 // typealiases:
 typealias BinaryenIndex = Int
-typealias BinaryenType = Int
+typealias BinaryenType = Long
 typealias BinaryenExpressionId = Int
 typealias BinaryenExternalKind = Int
 typealias BinaryenFeatures = Int
@@ -25,6 +25,10 @@ class BinaryenModuleAllocateAndWriteResult: Structure()
 typealias BinaryenSideEffects = Int
 typealias RelooperRef = Pointer
 typealias RelooperBlockRef = Pointer
+typealias ExpressionRunnerRef = Pointer
+typealias ExpressionRunnerFlags = Int
+
+
 
 
 interface Binaryen: Library {
@@ -57,7 +61,7 @@ interface Binaryen: Library {
     fun BinaryenAddEventImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String, attribute: Int, params: BinaryenType, results: BinaryenType)
     fun BinaryenAddFloat32(): BinaryenOp
     fun BinaryenAddFloat64(): BinaryenOp
-    fun BinaryenAddFunction(module: BinaryenModuleRef, name: String, params: BinaryenType, results: BinaryenType, varTypes: IntArray?, numVarTypes: Int, body: BinaryenExpressionRef): BinaryenFunctionRef
+    fun BinaryenAddFunction(module: BinaryenModuleRef, name: String, params: BinaryenType, results: BinaryenType, varTypes: LongArray?, numVarTypes: Int, body: BinaryenExpressionRef): BinaryenFunctionRef
     fun BinaryenAddFunctionExport(module: BinaryenModuleRef, internalName: String, externalName: String): BinaryenExportRef
     fun BinaryenAddFunctionImport(module: BinaryenModuleRef, internalName: String, externalModuleName: String, externalBaseName: String, params: BinaryenType, results: BinaryenType)
     fun BinaryenAddGlobal(module: BinaryenModuleRef, name: String, type: BinaryenType, mutable_: Byte, init: BinaryenExpressionRef): BinaryenGlobalRef
@@ -163,6 +167,8 @@ interface Binaryen: Library {
     fun BinaryenCallIndirectGetOperand(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
     fun BinaryenCallIndirectGetTarget(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenCallIndirectId(): BinaryenExpressionId
+    fun BinaryenCallIndirectIsReturn(expr: BinaryenExpressionRef): Int
+    fun BinaryenCallIsReturn(expr: BinaryenExpressionRef): Int
     fun BinaryenCeilFloat32(): BinaryenOp
     fun BinaryenCeilFloat64(): BinaryenOp
     fun BinaryenClearPassArguments()
@@ -606,14 +612,13 @@ interface Binaryen: Library {
     fun BinaryenSelectGetIfFalse(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSelectGetIfTrue(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSelectId(): BinaryenExpressionId
-    fun BinaryenSetAPITracing(on: Int)
     fun BinaryenSetAlwaysInlineMaxSize(size: Int)
     fun BinaryenSetColorsEnabled(enabled: Int)
     fun BinaryenSetDebugInfo(on: Int)
     fun BinaryenSetFlexibleInlineMaxSize(size: Int)
     fun BinaryenSetFunctionTable(module: BinaryenModuleRef, initial: Int, maximum: Int, funcNames: Array<String>, numFuncNames: Int, offset: BinaryenExpressionRef)
     fun BinaryenSetLowMemoryUnused(on: Int)
-    fun BinaryenSetMemory(module: BinaryenModuleRef, initial: Int, maximum: Int, exportName: String, segments: Array<String>, segmentPassive: ByteArray?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: IntArray?, numSegments: Int, shared: Byte)
+    fun BinaryenSetMemory(module: BinaryenModuleRef, initial: Int, maximum: Int, exportName: String, segments: Array<String>, segmentPassive: ByteArray?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: LongArray?, numSegments: Int, shared: Byte)
     fun BinaryenSetOneCallerInlineMaxSize(size: Int)
     fun BinaryenSetOptimizeLevel(level: Int)
     fun BinaryenSetPassArgument(name: String, value: String)
@@ -732,9 +737,9 @@ interface Binaryen: Library {
     fun BinaryenTypeAnyref(): BinaryenType
     fun BinaryenTypeArity(t: BinaryenType): Int
     fun BinaryenTypeAuto(): BinaryenType
-    fun BinaryenTypeCreate(valueTypes: IntArray?, numTypes: Int): BinaryenType
+    fun BinaryenTypeCreate(valueTypes: LongArray?, numTypes: Int): BinaryenType
     fun BinaryenTypeExnref(): BinaryenType
-    fun BinaryenTypeExpand(t: BinaryenType, buf: IntArray?)
+    fun BinaryenTypeExpand(t: BinaryenType, buf: LongArray?)
     fun BinaryenTypeFloat32(): BinaryenType
     fun BinaryenTypeFloat64(): BinaryenType
     fun BinaryenTypeFuncref(): BinaryenType
@@ -762,10 +767,17 @@ interface Binaryen: Library {
     fun BinaryenXorInt32(): BinaryenOp
     fun BinaryenXorInt64(): BinaryenOp
     fun BinaryenXorVec128(): BinaryenOp
+    fun ExpressionRunnerCreate(module: BinaryenModuleRef, flags: ExpressionRunnerFlags, maxDepth: Int, maxLoopIterations: Int): ExpressionRunnerRef
+    fun ExpressionRunnerFlagsDefault(): ExpressionRunnerFlags
+    fun ExpressionRunnerFlagsPreserveSideeffects(): ExpressionRunnerFlags
+    fun ExpressionRunnerFlagsTraverseCalls(): ExpressionRunnerFlags
+    fun ExpressionRunnerRunAndDispose(runner: ExpressionRunnerRef, expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun ExpressionRunnerSetGlobalValue(runner: ExpressionRunnerRef, name: String, value: BinaryenExpressionRef): Int
+    fun ExpressionRunnerSetLocalValue(runner: ExpressionRunnerRef, index: Int, value: BinaryenExpressionRef): Int
     fun RelooperAddBlock(relooper: RelooperRef, code: BinaryenExpressionRef): RelooperBlockRef
     fun RelooperAddBlockWithSwitch(relooper: RelooperRef, code: BinaryenExpressionRef, condition: BinaryenExpressionRef): RelooperBlockRef
     fun RelooperAddBranch(from: RelooperBlockRef, to: RelooperBlockRef, condition: BinaryenExpressionRef, code: BinaryenExpressionRef)
-    fun RelooperAddBranchForSwitch(from: RelooperBlockRef, to: RelooperBlockRef, indexes: IntArray?, numIndexes: Int, code: BinaryenExpressionRef)
+    fun RelooperAddBranchForSwitch(from: RelooperBlockRef, to: RelooperBlockRef, indexes: LongArray?, numIndexes: Int, code: BinaryenExpressionRef)
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperRenderAndDispose(relooper: RelooperRef, entry: RelooperBlockRef, labelHelper: Int): BinaryenExpressionRef
 

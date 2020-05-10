@@ -5,7 +5,7 @@ import binaryen
 
 def ctype_to_kotlin(ctype):
     ctype = ctype.strip()
-    if ctype == "void*":
+    if ctype in ("void*", "uintptr_t"):
         return "Pointer"
     elif ctype in ("char*", "char *", "const char*", "const char *"):
         return "String"
@@ -26,10 +26,10 @@ def ctype_to_kotlin(ctype):
     elif ctype in ("uint8_t*", "int8_t*"):
         return "ByteArray"
     elif ctype in ("BinaryenType*", "BinaryenIndex*"):
-        return "IntArray"
+        return "LongArray"
     elif ctype.endswith("*"):
         return "Array<{}>".format(ctype[:-1])
-    elif ctype.startswith(("Binary", "Relooper")):
+    elif ctype.startswith(("Binary", "Relooper", "ExpressionRunner")):
         return ctype
     else:
         raise NotImplementedError("ctype: '"+ctype+"'")
@@ -48,8 +48,11 @@ def create_typedefs(headerlines):
                 elif words[3] == "{":
                     print("class {}: Structure()".format(words[2]))
             else:
-                ctype = ctype_to_kotlin(words[1])
                 typename = words[2].rstrip(";")
+                if typename=="BinaryenType":
+                    ctype = "Long"      #  not Pointer...
+                else:
+                    ctype = ctype_to_kotlin(words[1])
                 print("typealias", typename, "=", ctype)
 
 

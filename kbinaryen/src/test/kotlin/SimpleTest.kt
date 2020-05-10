@@ -21,7 +21,7 @@ class BinaryenBasicTests {
         val module: BinaryenModuleRef = b.BinaryenModuleCreate()
 
         // Create a function type for  i32 (i32, i32)
-        val params = b.BinaryenTypeCreate(arrayOf(b.BinaryenTypeInt32(), b.BinaryenTypeInt32()).toIntArray(), 2)
+        val params = b.BinaryenTypeCreate(arrayOf(b.BinaryenTypeInt32(), b.BinaryenTypeInt32()).toLongArray(), 2)
         val results = b.BinaryenTypeInt32()
 
         // Get the 0 and 1 arguments, and add them
