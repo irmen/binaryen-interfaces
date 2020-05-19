@@ -236,6 +236,7 @@ interface Binaryen: Library {
     fun BinaryenExportGetKind(export_: BinaryenExportRef): BinaryenExternalKind
     fun BinaryenExportGetName(export_: BinaryenExportRef): String
     fun BinaryenExportGetValue(export_: BinaryenExportRef): String
+    fun BinaryenExpressionCopy(expr: BinaryenExpressionRef, module: BinaryenModuleRef): BinaryenExpressionRef
     fun BinaryenExpressionGetId(expr: BinaryenExpressionRef): BinaryenExpressionId
     fun BinaryenExpressionGetSideEffects(expr: BinaryenExpressionRef, features: BinaryenFeatures): BinaryenSideEffects
     fun BinaryenExpressionGetType(expr: BinaryenExpressionRef): BinaryenType
@@ -494,6 +495,7 @@ interface Binaryen: Library {
     fun BinaryenMulVecF64x2(): BinaryenOp
     fun BinaryenMulVecI16x8(): BinaryenOp
     fun BinaryenMulVecI32x4(): BinaryenOp
+    fun BinaryenMulVecI64x2(): BinaryenOp
     fun BinaryenMulVecI8x16(): BinaryenOp
     fun BinaryenNarrowSVecI16x8ToVecI8x16(): BinaryenOp
     fun BinaryenNarrowSVecI32x4ToVecI16x8(): BinaryenOp
@@ -524,6 +526,10 @@ interface Binaryen: Library {
     fun BinaryenOrInt32(): BinaryenOp
     fun BinaryenOrInt64(): BinaryenOp
     fun BinaryenOrVec128(): BinaryenOp
+    fun BinaryenPMaxVecF32x4(): BinaryenOp
+    fun BinaryenPMaxVecF64x2(): BinaryenOp
+    fun BinaryenPMinVecF32x4(): BinaryenOp
+    fun BinaryenPMinVecF64x2(): BinaryenOp
     fun BinaryenPop(module: BinaryenModuleRef, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenPopId(): BinaryenExpressionId
     fun BinaryenPopcntInt32(): BinaryenOp
