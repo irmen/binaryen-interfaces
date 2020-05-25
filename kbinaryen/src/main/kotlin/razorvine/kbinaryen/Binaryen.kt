@@ -535,9 +535,6 @@ interface Binaryen: Library {
     fun BinaryenPopcntInt32(): BinaryenOp
     fun BinaryenPopcntInt64(): BinaryenOp
     fun BinaryenPromoteFloat32(): BinaryenOp
-    fun BinaryenPush(module: BinaryenModuleRef, value: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenPushGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenPushId(): BinaryenExpressionId
     fun BinaryenQFMAVecF32x4(): BinaryenOp
     fun BinaryenQFMAVecF64x2(): BinaryenOp
     fun BinaryenQFMSVecF32x4(): BinaryenOp
