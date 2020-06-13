@@ -171,6 +171,8 @@ interface Binaryen: Library {
     fun BinaryenCallIsReturn(expr: BinaryenExpressionRef): Int
     fun BinaryenCeilFloat32(): BinaryenOp
     fun BinaryenCeilFloat64(): BinaryenOp
+    fun BinaryenCeilVecF32x4(): BinaryenOp
+    fun BinaryenCeilVecF64x2(): BinaryenOp
     fun BinaryenClearPassArguments()
     fun BinaryenClzInt32(): BinaryenOp
     fun BinaryenClzInt64(): BinaryenOp
@@ -275,6 +277,8 @@ interface Binaryen: Library {
     fun BinaryenFeatureTailCall(): BinaryenFeatures
     fun BinaryenFloorFloat32(): BinaryenOp
     fun BinaryenFloorFloat64(): BinaryenOp
+    fun BinaryenFloorVecF32x4(): BinaryenOp
+    fun BinaryenFloorVecF64x2(): BinaryenOp
     fun BinaryenFunctionGetBody(func: BinaryenFunctionRef): BinaryenExpressionRef
     fun BinaryenFunctionGetName(func: BinaryenFunctionRef): String
     fun BinaryenFunctionGetNumVars(func: BinaryenFunctionRef): Int
@@ -512,6 +516,8 @@ interface Binaryen: Library {
     fun BinaryenNeVecI8x16(): BinaryenOp
     fun BinaryenNearestFloat32(): BinaryenOp
     fun BinaryenNearestFloat64(): BinaryenOp
+    fun BinaryenNearestVecF32x4(): BinaryenOp
+    fun BinaryenNearestVecF64x2(): BinaryenOp
     fun BinaryenNegFloat32(): BinaryenOp
     fun BinaryenNegFloat64(): BinaryenOp
     fun BinaryenNegVecF32x4(): BinaryenOp
@@ -648,6 +654,7 @@ interface Binaryen: Library {
     fun BinaryenSideEffectAny(): BinaryenSideEffects
     fun BinaryenSideEffectBranches(): BinaryenSideEffects
     fun BinaryenSideEffectCalls(): BinaryenSideEffects
+    fun BinaryenSideEffectDanglingPop(): BinaryenSideEffects
     fun BinaryenSideEffectImplicitTrap(): BinaryenSideEffects
     fun BinaryenSideEffectIsAtomic(): BinaryenSideEffects
     fun BinaryenSideEffectNone(): BinaryenSideEffects
@@ -725,6 +732,8 @@ interface Binaryen: Library {
     fun BinaryenTruncUFloat32ToInt64(): BinaryenOp
     fun BinaryenTruncUFloat64ToInt32(): BinaryenOp
     fun BinaryenTruncUFloat64ToInt64(): BinaryenOp
+    fun BinaryenTruncVecF32x4(): BinaryenOp
+    fun BinaryenTruncVecF64x2(): BinaryenOp
     fun BinaryenTry(module: BinaryenModuleRef, body: BinaryenExpressionRef, catchBody: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenTryGetBody(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenTryGetCatchBody(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -737,12 +746,12 @@ interface Binaryen: Library {
     fun BinaryenTupleMakeGetNumOperands(expr: BinaryenExpressionRef): Int
     fun BinaryenTupleMakeGetOperand(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
     fun BinaryenTupleMakeId(): BinaryenExpressionId
-    fun BinaryenTypeAnyref(): BinaryenType
     fun BinaryenTypeArity(t: BinaryenType): Int
     fun BinaryenTypeAuto(): BinaryenType
     fun BinaryenTypeCreate(valueTypes: LongArray?, numTypes: Int): BinaryenType
     fun BinaryenTypeExnref(): BinaryenType
     fun BinaryenTypeExpand(t: BinaryenType, buf: LongArray?)
+    fun BinaryenTypeExternref(): BinaryenType
     fun BinaryenTypeFloat32(): BinaryenType
     fun BinaryenTypeFloat64(): BinaryenType
     fun BinaryenTypeFuncref(): BinaryenType
@@ -783,5 +792,4 @@ interface Binaryen: Library {
     fun RelooperAddBranchForSwitch(from: RelooperBlockRef, to: RelooperBlockRef, indexes: LongArray?, numIndexes: Int, code: BinaryenExpressionRef)
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperRenderAndDispose(relooper: RelooperRef, entry: RelooperBlockRef, labelHelper: Int): BinaryenExpressionRef
-
 }
