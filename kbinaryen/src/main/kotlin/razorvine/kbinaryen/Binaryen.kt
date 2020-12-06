@@ -721,6 +721,7 @@ interface Binaryen: Library {
     fun BinaryenSIMDLoadSetOffset(expr: BinaryenExpressionRef, offset: Int)
     fun BinaryenSIMDLoadSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
     fun BinaryenSIMDLoadSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
+    fun BinaryenSIMDLoadStoreLaneId(): BinaryenExpressionId
     fun BinaryenSIMDReplace(module: BinaryenModuleRef, op: BinaryenOp, vec: BinaryenExpressionRef, index: Byte, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSIMDReplaceGetIndex(expr: BinaryenExpressionRef): Byte
     fun BinaryenSIMDReplaceGetOp(expr: BinaryenExpressionRef): BinaryenOp

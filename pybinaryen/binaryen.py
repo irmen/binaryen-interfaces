@@ -701,6 +701,7 @@ SIMDLoadSetAlign = lib.BinaryenSIMDLoadSetAlign
 SIMDLoadSetOffset = lib.BinaryenSIMDLoadSetOffset
 SIMDLoadSetOp = lib.BinaryenSIMDLoadSetOp
 SIMDLoadSetPtr = lib.BinaryenSIMDLoadSetPtr
+SIMDLoadStoreLaneId = lib.BinaryenSIMDLoadStoreLaneId
 SIMDReplace = lib.BinaryenSIMDReplace
 SIMDReplaceGetIndex = lib.BinaryenSIMDReplaceGetIndex
 SIMDReplaceGetOp = lib.BinaryenSIMDReplaceGetOp
