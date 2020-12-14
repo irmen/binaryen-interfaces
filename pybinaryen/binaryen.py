@@ -5,7 +5,7 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.4"
+__version__ = "1.5"
 
 from _binaryen import ffi, lib
 
@@ -196,6 +196,7 @@ CallIndirectSetReturn = lib.BinaryenCallIndirectSetReturn
 CallIndirectSetTarget = lib.BinaryenCallIndirectSetTarget
 CallInsertOperandAt = lib.BinaryenCallInsertOperandAt
 CallIsReturn = lib.BinaryenCallIsReturn
+CallRefId = lib.BinaryenCallRefId
 CallRemoveOperandAt = lib.BinaryenCallRemoveOperandAt
 CallSetOperandAt = lib.BinaryenCallSetOperandAt
 CallSetReturn = lib.BinaryenCallSetReturn

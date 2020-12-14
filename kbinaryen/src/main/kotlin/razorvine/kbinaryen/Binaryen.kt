@@ -216,6 +216,7 @@ interface Binaryen: Library {
     fun BinaryenCallIndirectSetTarget(expr: BinaryenExpressionRef, targetExpr: BinaryenExpressionRef)
     fun BinaryenCallInsertOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
     fun BinaryenCallIsReturn(expr: BinaryenExpressionRef): Int
+    fun BinaryenCallRefId(): BinaryenExpressionId
     fun BinaryenCallRemoveOperandAt(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
     fun BinaryenCallSetOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
     fun BinaryenCallSetReturn(expr: BinaryenExpressionRef, isReturn: Int)
@@ -658,7 +659,7 @@ interface Binaryen: Library {
     fun BinaryenRefEqId(): BinaryenExpressionId
     fun BinaryenRefEqSetLeft(expr: BinaryenExpressionRef, left: BinaryenExpressionRef)
     fun BinaryenRefEqSetRight(expr: BinaryenExpressionRef, right: BinaryenExpressionRef)
-    fun BinaryenRefFunc(module: BinaryenModuleRef, func: String): BinaryenExpressionRef
+    fun BinaryenRefFunc(module: BinaryenModuleRef, func: String, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenRefFuncGetFunc(expr: BinaryenExpressionRef): String
     fun BinaryenRefFuncId(): BinaryenExpressionId
     fun BinaryenRefFuncSetFunc(expr: BinaryenExpressionRef, funcName: String)
@@ -975,3 +976,4 @@ interface Binaryen: Library {
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperRenderAndDispose(relooper: RelooperRef, entry: RelooperBlockRef, labelHelper: Int): BinaryenExpressionRef
 }
+
