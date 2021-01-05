@@ -10,7 +10,7 @@ This module provides a Python interface to the
 That library has to be installed separately, make sure it is available on your system as a shared library.
 You may need to add something to your link library search path to let python pick it up.
 
-*Requires Python 3.5 or newer.  Also works on pypy3 (because it uses cffi).*
+*Requires Python 3.6 or newer.  Also works on pypy3 (because it uses cffi).*
 
 Software license: MIT
 
