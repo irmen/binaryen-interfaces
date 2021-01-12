@@ -84,7 +84,6 @@ interface Binaryen: Library {
     fun BinaryenAddVecI8x16(): BinaryenOp
     fun BinaryenAllTrueVecI16x8(): BinaryenOp
     fun BinaryenAllTrueVecI32x4(): BinaryenOp
-    fun BinaryenAllTrueVecI64x2(): BinaryenOp
     fun BinaryenAllTrueVecI8x16(): BinaryenOp
     fun BinaryenAndInt32(): BinaryenOp
     fun BinaryenAndInt64(): BinaryenOp
@@ -92,7 +91,6 @@ interface Binaryen: Library {
     fun BinaryenAndVec128(): BinaryenOp
     fun BinaryenAnyTrueVecI16x8(): BinaryenOp
     fun BinaryenAnyTrueVecI32x4(): BinaryenOp
-    fun BinaryenAnyTrueVecI64x2(): BinaryenOp
     fun BinaryenAnyTrueVecI8x16(): BinaryenOp
     fun BinaryenAreColorsEnabled(): Int
     fun BinaryenArrayGetId(): BinaryenExpressionId
@@ -378,15 +376,17 @@ interface Binaryen: Library {
     fun BinaryenGetAlwaysInlineMaxSize(): Int
     fun BinaryenGetDebugInfo(): Int
     fun BinaryenGetEvent(module: BinaryenModuleRef, name: String): BinaryenEventRef
-    fun BinaryenGetExportByIndex(module: BinaryenModuleRef, id: Int): BinaryenExportRef
+    fun BinaryenGetExport(module: BinaryenModuleRef, externalName: String): BinaryenExportRef
+    fun BinaryenGetExportByIndex(module: BinaryenModuleRef, index: Int): BinaryenExportRef
     fun BinaryenGetFastMath(): Int
     fun BinaryenGetFlexibleInlineMaxSize(): Int
     fun BinaryenGetFunction(module: BinaryenModuleRef, name: String): BinaryenFunctionRef
-    fun BinaryenGetFunctionByIndex(module: BinaryenModuleRef, id: Int): BinaryenFunctionRef
+    fun BinaryenGetFunctionByIndex(module: BinaryenModuleRef, index: Int): BinaryenFunctionRef
     fun BinaryenGetFunctionTableSegmentData(module: BinaryenModuleRef, segmentId: Int, dataId: Int): String
     fun BinaryenGetFunctionTableSegmentLength(module: BinaryenModuleRef, segmentId: Int): Int
     fun BinaryenGetFunctionTableSegmentOffset(module: BinaryenModuleRef, segmentId: Int): BinaryenExpressionRef
     fun BinaryenGetGlobal(module: BinaryenModuleRef, name: String): BinaryenGlobalRef
+    fun BinaryenGetGlobalByIndex(module: BinaryenModuleRef, index: Int): BinaryenGlobalRef
     fun BinaryenGetLowMemoryUnused(): Int
     fun BinaryenGetMemorySegmentByteLength(module: BinaryenModuleRef, id: Int): Int
     fun BinaryenGetMemorySegmentByteOffset(module: BinaryenModuleRef, id: Int): Int
@@ -394,6 +394,7 @@ interface Binaryen: Library {
     fun BinaryenGetNumExports(module: BinaryenModuleRef): Int
     fun BinaryenGetNumFunctionTableSegments(module: BinaryenModuleRef): Int
     fun BinaryenGetNumFunctions(module: BinaryenModuleRef): Int
+    fun BinaryenGetNumGlobals(module: BinaryenModuleRef): Int
     fun BinaryenGetNumMemorySegments(module: BinaryenModuleRef): Int
     fun BinaryenGetOneCallerInlineMaxSize(): Int
     fun BinaryenGetOptimizeLevel(): Int
@@ -647,6 +648,7 @@ interface Binaryen: Library {
     fun BinaryenPopId(): BinaryenExpressionId
     fun BinaryenPopcntInt32(): BinaryenOp
     fun BinaryenPopcntInt64(): BinaryenOp
+    fun BinaryenPrefetchId(): BinaryenExpressionId
     fun BinaryenPromoteFloat32(): BinaryenOp
     fun BinaryenQFMAVecF32x4(): BinaryenOp
     fun BinaryenQFMAVecF64x2(): BinaryenOp
