@@ -3,7 +3,7 @@ import razorvine.kbinaryen.*
 
 class BinaryenBasicTests {
     init {
-        Binaryen.INSTANCE.BinaryenSetColorsEnabled(0)
+        Binaryen.INSTANCE.BinaryenSetColorsEnabled(false)
     }
 
     @Test

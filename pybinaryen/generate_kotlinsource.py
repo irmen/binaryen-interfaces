@@ -13,6 +13,8 @@ def ctype_to_kotlin(ctype):
         return "Array<String>"
     elif ctype in ("int", "size_t", "uint32_t", "int32_t", "BinaryenIndex"):
         return "Int"
+    elif ctype == "bool":
+        return "Boolean"
     elif ctype in ("uint64_t", "int64_t"):
         return "Long"
     elif ctype == "void":
@@ -28,7 +30,7 @@ def ctype_to_kotlin(ctype):
     elif ctype in ("BinaryenType*", "BinaryenIndex*"):
         return "LongArray"
     elif ctype.endswith("*"):
-        return "Array<{}>".format(ctype[:-1])
+        return "Array<{}>".format(ctype_to_kotlin(ctype[:-1]))
     elif ctype.startswith(("Binary", "Relooper", "ExpressionRunner")):
         return ctype
     else:
