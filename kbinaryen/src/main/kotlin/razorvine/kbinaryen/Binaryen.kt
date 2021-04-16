@@ -55,6 +55,7 @@ interface Binaryen: Library {
     fun BinaryenAbsVecF64x2(): BinaryenOp
     fun BinaryenAbsVecI16x8(): BinaryenOp
     fun BinaryenAbsVecI32x4(): BinaryenOp
+    fun BinaryenAbsVecI64x2(): BinaryenOp
     fun BinaryenAbsVecI8x16(): BinaryenOp
     fun BinaryenAddActiveElementSegment(module: BinaryenModuleRef, table: String, name: String, funcNames: Array<String>, numFuncNames: Int, offset: BinaryenExpressionRef): BinaryenElementSegmentRef
     fun BinaryenAddCustomSection(module: BinaryenModuleRef, name: String, contents: String, contentsSize: Int)
@@ -89,14 +90,13 @@ interface Binaryen: Library {
     fun BinaryenAddVecI8x16(): BinaryenOp
     fun BinaryenAllTrueVecI16x8(): BinaryenOp
     fun BinaryenAllTrueVecI32x4(): BinaryenOp
+    fun BinaryenAllTrueVecI64x2(): BinaryenOp
     fun BinaryenAllTrueVecI8x16(): BinaryenOp
     fun BinaryenAndInt32(): BinaryenOp
     fun BinaryenAndInt64(): BinaryenOp
     fun BinaryenAndNotVec128(): BinaryenOp
     fun BinaryenAndVec128(): BinaryenOp
-    fun BinaryenAnyTrueVecI16x8(): BinaryenOp
-    fun BinaryenAnyTrueVecI32x4(): BinaryenOp
-    fun BinaryenAnyTrueVecI8x16(): BinaryenOp
+    fun BinaryenAnyTrueVec128(): BinaryenOp
     fun BinaryenAreColorsEnabled(): Boolean
     fun BinaryenArrayGetId(): BinaryenExpressionId
     fun BinaryenArrayLenId(): BinaryenExpressionId
@@ -166,6 +166,7 @@ interface Binaryen: Library {
     fun BinaryenBinarySetRight(expr: BinaryenExpressionRef, rightExpr: BinaryenExpressionRef)
     fun BinaryenBitmaskVecI16x8(): BinaryenOp
     fun BinaryenBitmaskVecI32x4(): BinaryenOp
+    fun BinaryenBitmaskVecI64x2(): BinaryenOp
     fun BinaryenBitmaskVecI8x16(): BinaryenOp
     fun BinaryenBitselectVec128(): BinaryenOp
     fun BinaryenBlock(module: BinaryenModuleRef, name: String, children: Array<BinaryenExpressionRef>?, numChildren: Int, type: BinaryenType): BinaryenExpressionRef
@@ -241,18 +242,18 @@ interface Binaryen: Library {
     fun BinaryenConstSetValueI64High(expr: BinaryenExpressionRef, valueHigh: Int)
     fun BinaryenConstSetValueI64Low(expr: BinaryenExpressionRef, valueLow: Int)
     fun BinaryenConstSetValueV128(expr: BinaryenExpressionRef, value: Byte)
+    fun BinaryenConvertLowSVecI32x4ToVecF64x2(): BinaryenOp
+    fun BinaryenConvertLowUVecI32x4ToVecF64x2(): BinaryenOp
     fun BinaryenConvertSInt32ToFloat32(): BinaryenOp
     fun BinaryenConvertSInt32ToFloat64(): BinaryenOp
     fun BinaryenConvertSInt64ToFloat32(): BinaryenOp
     fun BinaryenConvertSInt64ToFloat64(): BinaryenOp
     fun BinaryenConvertSVecI32x4ToVecF32x4(): BinaryenOp
-    fun BinaryenConvertSVecI64x2ToVecF64x2(): BinaryenOp
     fun BinaryenConvertUInt32ToFloat32(): BinaryenOp
     fun BinaryenConvertUInt32ToFloat64(): BinaryenOp
     fun BinaryenConvertUInt64ToFloat32(): BinaryenOp
     fun BinaryenConvertUInt64ToFloat64(): BinaryenOp
     fun BinaryenConvertUVecI32x4ToVecF32x4(): BinaryenOp
-    fun BinaryenConvertUVecI64x2ToVecF64x2(): BinaryenOp
     fun BinaryenCopyMemorySegmentData(module: BinaryenModuleRef, id: Int, buffer: String)
     fun BinaryenCopySignFloat32(): BinaryenOp
     fun BinaryenCopySignFloat64(): BinaryenOp
@@ -263,6 +264,7 @@ interface Binaryen: Library {
     fun BinaryenDataDropId(): BinaryenExpressionId
     fun BinaryenDataDropSetSegment(expr: BinaryenExpressionRef, segmentIndex: Int)
     fun BinaryenDemoteFloat64(): BinaryenOp
+    fun BinaryenDemoteZeroVecF64x2ToVecF32x4(): BinaryenOp
     fun BinaryenDivFloat32(): BinaryenOp
     fun BinaryenDivFloat64(): BinaryenOp
     fun BinaryenDivSInt32(): BinaryenOp
@@ -291,6 +293,7 @@ interface Binaryen: Library {
     fun BinaryenEqVecF64x2(): BinaryenOp
     fun BinaryenEqVecI16x8(): BinaryenOp
     fun BinaryenEqVecI32x4(): BinaryenOp
+    fun BinaryenEqVecI64x2(): BinaryenOp
     fun BinaryenEqVecI8x16(): BinaryenOp
     fun BinaryenEqZInt32(): BinaryenOp
     fun BinaryenEqZInt64(): BinaryenOp
@@ -310,6 +313,34 @@ interface Binaryen: Library {
     fun BinaryenExpressionGetType(expr: BinaryenExpressionRef): BinaryenType
     fun BinaryenExpressionPrint(expr: BinaryenExpressionRef)
     fun BinaryenExpressionSetType(expr: BinaryenExpressionRef, type: BinaryenType)
+    fun BinaryenExtAddPairwiseSVecI16x8ToI32x4(): BinaryenOp
+    fun BinaryenExtAddPairwiseSVecI8x16ToI16x8(): BinaryenOp
+    fun BinaryenExtAddPairwiseUVecI16x8ToI32x4(): BinaryenOp
+    fun BinaryenExtAddPairwiseUVecI8x16ToI16x8(): BinaryenOp
+    fun BinaryenExtMulHighSVecI16x8(): BinaryenOp
+    fun BinaryenExtMulHighSVecI32x4(): BinaryenOp
+    fun BinaryenExtMulHighSVecI64x2(): BinaryenOp
+    fun BinaryenExtMulHighUVecI16x8(): BinaryenOp
+    fun BinaryenExtMulHighUVecI32x4(): BinaryenOp
+    fun BinaryenExtMulHighUVecI64x2(): BinaryenOp
+    fun BinaryenExtMulLowSVecI16x8(): BinaryenOp
+    fun BinaryenExtMulLowSVecI32x4(): BinaryenOp
+    fun BinaryenExtMulLowSVecI64x2(): BinaryenOp
+    fun BinaryenExtMulLowUVecI16x8(): BinaryenOp
+    fun BinaryenExtMulLowUVecI32x4(): BinaryenOp
+    fun BinaryenExtMulLowUVecI64x2(): BinaryenOp
+    fun BinaryenExtendHighSVecI16x8ToVecI32x4(): BinaryenOp
+    fun BinaryenExtendHighSVecI32x4ToVecI64x2(): BinaryenOp
+    fun BinaryenExtendHighSVecI8x16ToVecI16x8(): BinaryenOp
+    fun BinaryenExtendHighUVecI16x8ToVecI32x4(): BinaryenOp
+    fun BinaryenExtendHighUVecI32x4ToVecI64x2(): BinaryenOp
+    fun BinaryenExtendHighUVecI8x16ToVecI16x8(): BinaryenOp
+    fun BinaryenExtendLowSVecI16x8ToVecI32x4(): BinaryenOp
+    fun BinaryenExtendLowSVecI32x4ToVecI64x2(): BinaryenOp
+    fun BinaryenExtendLowSVecI8x16ToVecI16x8(): BinaryenOp
+    fun BinaryenExtendLowUVecI16x8ToVecI32x4(): BinaryenOp
+    fun BinaryenExtendLowUVecI32x4ToVecI64x2(): BinaryenOp
+    fun BinaryenExtendLowUVecI8x16ToVecI16x8(): BinaryenOp
     fun BinaryenExtendS16Int32(): BinaryenOp
     fun BinaryenExtendS16Int64(): BinaryenOp
     fun BinaryenExtendS32Int64(): BinaryenOp
@@ -371,6 +402,7 @@ interface Binaryen: Library {
     fun BinaryenGeSInt64(): BinaryenOp
     fun BinaryenGeSVecI16x8(): BinaryenOp
     fun BinaryenGeSVecI32x4(): BinaryenOp
+    fun BinaryenGeSVecI64x2(): BinaryenOp
     fun BinaryenGeSVecI8x16(): BinaryenOp
     fun BinaryenGeUInt32(): BinaryenOp
     fun BinaryenGeUInt64(): BinaryenOp
@@ -431,6 +463,7 @@ interface Binaryen: Library {
     fun BinaryenGtSInt64(): BinaryenOp
     fun BinaryenGtSVecI16x8(): BinaryenOp
     fun BinaryenGtSVecI32x4(): BinaryenOp
+    fun BinaryenGtSVecI64x2(): BinaryenOp
     fun BinaryenGtSVecI8x16(): BinaryenOp
     fun BinaryenGtUInt32(): BinaryenOp
     fun BinaryenGtUInt64(): BinaryenOp
@@ -464,6 +497,7 @@ interface Binaryen: Library {
     fun BinaryenLeSInt64(): BinaryenOp
     fun BinaryenLeSVecI16x8(): BinaryenOp
     fun BinaryenLeSVecI32x4(): BinaryenOp
+    fun BinaryenLeSVecI64x2(): BinaryenOp
     fun BinaryenLeSVecI8x16(): BinaryenOp
     fun BinaryenLeUInt32(): BinaryenOp
     fun BinaryenLeUInt64(): BinaryenOp
@@ -480,12 +514,22 @@ interface Binaryen: Library {
     fun BinaryenLiteralInt64(x: Long): BinaryenLiteral
     fun BinaryenLiteralVec128(x: Byte): BinaryenLiteral
     fun BinaryenLoad(module: BinaryenModuleRef, bytes: Int, signed_: Boolean, offset: Int, align: Int, type: BinaryenType, ptr: BinaryenExpressionRef): BinaryenExpressionRef
-    fun BinaryenLoadExtSVec16x4ToVecI32x4(): BinaryenOp
-    fun BinaryenLoadExtSVec32x2ToVecI64x2(): BinaryenOp
-    fun BinaryenLoadExtSVec8x8ToVecI16x8(): BinaryenOp
-    fun BinaryenLoadExtUVec16x4ToVecI32x4(): BinaryenOp
-    fun BinaryenLoadExtUVec32x2ToVecI64x2(): BinaryenOp
-    fun BinaryenLoadExtUVec8x8ToVecI16x8(): BinaryenOp
+    fun BinaryenLoad16LaneVec128(): BinaryenOp
+    fun BinaryenLoad16SplatVec128(): BinaryenOp
+    fun BinaryenLoad16x4SVec128(): BinaryenOp
+    fun BinaryenLoad16x4UVec128(): BinaryenOp
+    fun BinaryenLoad32LaneVec128(): BinaryenOp
+    fun BinaryenLoad32SplatVec128(): BinaryenOp
+    fun BinaryenLoad32ZeroVec128(): BinaryenOp
+    fun BinaryenLoad32x2SVec128(): BinaryenOp
+    fun BinaryenLoad32x2UVec128(): BinaryenOp
+    fun BinaryenLoad64LaneVec128(): BinaryenOp
+    fun BinaryenLoad64SplatVec128(): BinaryenOp
+    fun BinaryenLoad64ZeroVec128(): BinaryenOp
+    fun BinaryenLoad8LaneVec128(): BinaryenOp
+    fun BinaryenLoad8SplatVec128(): BinaryenOp
+    fun BinaryenLoad8x8SVec128(): BinaryenOp
+    fun BinaryenLoad8x8UVec128(): BinaryenOp
     fun BinaryenLoadGetAlign(expr: BinaryenExpressionRef): Int
     fun BinaryenLoadGetBytes(expr: BinaryenExpressionRef): Int
     fun BinaryenLoadGetOffset(expr: BinaryenExpressionRef): Int
@@ -499,10 +543,6 @@ interface Binaryen: Library {
     fun BinaryenLoadSetOffset(expr: BinaryenExpressionRef, offset: Int)
     fun BinaryenLoadSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
     fun BinaryenLoadSetSigned(expr: BinaryenExpressionRef, isSigned: Boolean)
-    fun BinaryenLoadSplatVec16x8(): BinaryenOp
-    fun BinaryenLoadSplatVec32x4(): BinaryenOp
-    fun BinaryenLoadSplatVec64x2(): BinaryenOp
-    fun BinaryenLoadSplatVec8x16(): BinaryenOp
     fun BinaryenLocalGet(module: BinaryenModuleRef, index: Int, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenLocalGetGetIndex(expr: BinaryenExpressionRef): Int
     fun BinaryenLocalGetId(): BinaryenExpressionId
@@ -527,6 +567,7 @@ interface Binaryen: Library {
     fun BinaryenLtSInt64(): BinaryenOp
     fun BinaryenLtSVecI16x8(): BinaryenOp
     fun BinaryenLtSVecI32x4(): BinaryenOp
+    fun BinaryenLtSVecI64x2(): BinaryenOp
     fun BinaryenLtSVecI8x16(): BinaryenOp
     fun BinaryenLtUInt32(): BinaryenOp
     fun BinaryenLtUInt64(): BinaryenOp
@@ -616,7 +657,6 @@ interface Binaryen: Library {
     fun BinaryenMulVecI16x8(): BinaryenOp
     fun BinaryenMulVecI32x4(): BinaryenOp
     fun BinaryenMulVecI64x2(): BinaryenOp
-    fun BinaryenMulVecI8x16(): BinaryenOp
     fun BinaryenNarrowSVecI16x8ToVecI8x16(): BinaryenOp
     fun BinaryenNarrowSVecI32x4ToVecI16x8(): BinaryenOp
     fun BinaryenNarrowUVecI16x8ToVecI8x16(): BinaryenOp
@@ -629,6 +669,7 @@ interface Binaryen: Library {
     fun BinaryenNeVecF64x2(): BinaryenOp
     fun BinaryenNeVecI16x8(): BinaryenOp
     fun BinaryenNeVecI32x4(): BinaryenOp
+    fun BinaryenNeVecI64x2(): BinaryenOp
     fun BinaryenNeVecI8x16(): BinaryenOp
     fun BinaryenNearestFloat32(): BinaryenOp
     fun BinaryenNearestFloat64(): BinaryenOp
@@ -656,12 +697,10 @@ interface Binaryen: Library {
     fun BinaryenPopId(): BinaryenExpressionId
     fun BinaryenPopcntInt32(): BinaryenOp
     fun BinaryenPopcntInt64(): BinaryenOp
-    fun BinaryenPrefetchId(): BinaryenExpressionId
+    fun BinaryenPopcntVecI8x16(): BinaryenOp
     fun BinaryenPromoteFloat32(): BinaryenOp
-    fun BinaryenQFMAVecF32x4(): BinaryenOp
-    fun BinaryenQFMAVecF64x2(): BinaryenOp
-    fun BinaryenQFMSVecF32x4(): BinaryenOp
-    fun BinaryenQFMSVecF64x2(): BinaryenOp
+    fun BinaryenPromoteLowVecF32x4ToVecF64x2(): BinaryenOp
+    fun BinaryenQ15MulrSatSVecI16x8(): BinaryenOp
     fun BinaryenRefAs(module: BinaryenModuleRef, op: BinaryenOp, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenRefAsData(): BinaryenOp
     fun BinaryenRefAsFunc(): BinaryenOp
@@ -750,6 +789,7 @@ interface Binaryen: Library {
     fun BinaryenSIMDLoadSetOffset(expr: BinaryenExpressionRef, offset: Int)
     fun BinaryenSIMDLoadSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
     fun BinaryenSIMDLoadSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
+    fun BinaryenSIMDLoadStoreLane(module: BinaryenModuleRef, op: BinaryenOp, offset: Int, align: Int, index: Byte, ptr: BinaryenExpressionRef, vec: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSIMDLoadStoreLaneId(): BinaryenExpressionId
     fun BinaryenSIMDReplace(module: BinaryenModuleRef, op: BinaryenOp, vec: BinaryenExpressionRef, index: Byte, value: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSIMDReplaceGetIndex(expr: BinaryenExpressionRef): Byte
@@ -787,7 +827,6 @@ interface Binaryen: Library {
     fun BinaryenSIMDTernarySetB(expr: BinaryenExpressionRef, bExpr: BinaryenExpressionRef)
     fun BinaryenSIMDTernarySetC(expr: BinaryenExpressionRef, cExpr: BinaryenExpressionRef)
     fun BinaryenSIMDTernarySetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
-    fun BinaryenSIMDWidenId(): BinaryenExpressionId
     fun BinaryenSelect(module: BinaryenModuleRef, condition: BinaryenExpressionRef, ifTrue: BinaryenExpressionRef, ifFalse: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenSelectGetCondition(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenSelectGetIfFalse(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -852,6 +891,10 @@ interface Binaryen: Library {
     fun BinaryenSqrtVecF32x4(): BinaryenOp
     fun BinaryenSqrtVecF64x2(): BinaryenOp
     fun BinaryenStore(module: BinaryenModuleRef, bytes: Int, offset: Int, align: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
+    fun BinaryenStore16LaneVec128(): BinaryenOp
+    fun BinaryenStore32LaneVec128(): BinaryenOp
+    fun BinaryenStore64LaneVec128(): BinaryenOp
+    fun BinaryenStore8LaneVec128(): BinaryenOp
     fun BinaryenStoreGetAlign(expr: BinaryenExpressionRef): Int
     fun BinaryenStoreGetBytes(expr: BinaryenExpressionRef): Int
     fun BinaryenStoreGetOffset(expr: BinaryenExpressionRef): Int
@@ -929,13 +972,13 @@ interface Binaryen: Library {
     fun BinaryenTruncSatSFloat64ToInt32(): BinaryenOp
     fun BinaryenTruncSatSFloat64ToInt64(): BinaryenOp
     fun BinaryenTruncSatSVecF32x4ToVecI32x4(): BinaryenOp
-    fun BinaryenTruncSatSVecF64x2ToVecI64x2(): BinaryenOp
     fun BinaryenTruncSatUFloat32ToInt32(): BinaryenOp
     fun BinaryenTruncSatUFloat32ToInt64(): BinaryenOp
     fun BinaryenTruncSatUFloat64ToInt32(): BinaryenOp
     fun BinaryenTruncSatUFloat64ToInt64(): BinaryenOp
     fun BinaryenTruncSatUVecF32x4ToVecI32x4(): BinaryenOp
-    fun BinaryenTruncSatUVecF64x2ToVecI64x2(): BinaryenOp
+    fun BinaryenTruncSatZeroSVecF64x2ToVecI32x4(): BinaryenOp
+    fun BinaryenTruncSatZeroUVecF64x2ToVecI32x4(): BinaryenOp
     fun BinaryenTruncUFloat32ToInt32(): BinaryenOp
     fun BinaryenTruncUFloat32ToInt64(): BinaryenOp
     fun BinaryenTruncUFloat64ToInt32(): BinaryenOp
@@ -1003,14 +1046,6 @@ interface Binaryen: Library {
     fun BinaryenUnarySetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
     fun BinaryenUnreachable(module: BinaryenModuleRef): BinaryenExpressionRef
     fun BinaryenUnreachableId(): BinaryenExpressionId
-    fun BinaryenWidenHighSVecI16x8ToVecI32x4(): BinaryenOp
-    fun BinaryenWidenHighSVecI8x16ToVecI16x8(): BinaryenOp
-    fun BinaryenWidenHighUVecI16x8ToVecI32x4(): BinaryenOp
-    fun BinaryenWidenHighUVecI8x16ToVecI16x8(): BinaryenOp
-    fun BinaryenWidenLowSVecI16x8ToVecI32x4(): BinaryenOp
-    fun BinaryenWidenLowSVecI8x16ToVecI16x8(): BinaryenOp
-    fun BinaryenWidenLowUVecI16x8ToVecI32x4(): BinaryenOp
-    fun BinaryenWidenLowUVecI8x16ToVecI16x8(): BinaryenOp
     fun BinaryenWrapInt64(): BinaryenOp
     fun BinaryenXorInt32(): BinaryenOp
     fun BinaryenXorInt64(): BinaryenOp
