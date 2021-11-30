@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.6.0"
     `maven-publish`
     application
 }
@@ -19,7 +19,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
     implementation(kotlin("stdlib-jdk8"))
-    implementation("net.java.dev.jna:jna:5.5.0")
+    implementation("net.java.dev.jna:jna:5.10.0")
 
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")

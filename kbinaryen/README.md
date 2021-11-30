@@ -1,6 +1,3 @@
-[![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/irmen)
-
-
 # Kotlin/JVM interface to the Binaryen library
 
 This module provides a Kotlin/JVM interface to the
