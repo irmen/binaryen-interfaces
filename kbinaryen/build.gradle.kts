@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.razorvine"
-version = "1.4-SNAPSHOT"
+version = "1.5-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -18,7 +18,6 @@ dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
-    implementation(kotlin("stdlib-jdk8"))
     implementation("net.java.dev.jna:jna:5.10.0")
 
     // Use the Kotlin test library.
@@ -30,7 +29,7 @@ dependencies {
 }
 
 configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_11
 }
 
 tasks {
@@ -41,13 +40,13 @@ tasks {
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 }
 
 application {
     applicationName = "kbinaryen"
-    mainClassName = "razorvine.kbinaryen.TryBinaryenKt"
+    mainClass.set("razorvine.kbinaryen.MainTestKt")
 }
 
 val sourcesJar by tasks.registering(Jar::class) {
