@@ -368,6 +368,7 @@ interface Binaryen: Library {
     fun BinaryenFeatureMutableGlobals(): BinaryenFeatures
     fun BinaryenFeatureNontrappingFPToInt(): BinaryenFeatures
     fun BinaryenFeatureReferenceTypes(): BinaryenFeatures
+    fun BinaryenFeatureRelaxedSIMD(): BinaryenFeatures
     fun BinaryenFeatureSIMD128(): BinaryenFeatures
     fun BinaryenFeatureSignExt(): BinaryenFeatures
     fun BinaryenFeatureTailCall(): BinaryenFeatures
@@ -602,7 +603,7 @@ interface Binaryen: Library {
     fun BinaryenMemoryGrow(module: BinaryenModuleRef, delta: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenMemoryGrowGetDelta(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenMemoryGrowId(): BinaryenExpressionId
-    fun BinaryenMemoryGrowSetDelta(expr: BinaryenExpressionRef, delta: BinaryenExpressionRef)
+    fun BinaryenMemoryGrowSetDelta(expr: BinaryenExpressionRef, deltaExpr: BinaryenExpressionRef)
     fun BinaryenMemoryInit(module: BinaryenModuleRef, segment: Int, dest: BinaryenExpressionRef, offset: BinaryenExpressionRef, size: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenMemoryInitGetDest(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenMemoryInitGetOffset(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -888,11 +889,13 @@ interface Binaryen: Library {
     fun BinaryenSideEffectReadsGlobal(): BinaryenSideEffects
     fun BinaryenSideEffectReadsLocal(): BinaryenSideEffects
     fun BinaryenSideEffectReadsMemory(): BinaryenSideEffects
+    fun BinaryenSideEffectReadsTable(): BinaryenSideEffects
     fun BinaryenSideEffectThrows(): BinaryenSideEffects
     fun BinaryenSideEffectTrapsNeverHappen(): BinaryenSideEffects
     fun BinaryenSideEffectWritesGlobal(): BinaryenSideEffects
     fun BinaryenSideEffectWritesLocal(): BinaryenSideEffects
     fun BinaryenSideEffectWritesMemory(): BinaryenSideEffects
+    fun BinaryenSideEffectWritesTable(): BinaryenSideEffects
     fun BinaryenSplatVecF32x4(): BinaryenOp
     fun BinaryenSplatVecF64x2(): BinaryenOp
     fun BinaryenSplatVecI16x8(): BinaryenOp
@@ -955,15 +958,41 @@ interface Binaryen: Library {
     fun BinaryenSwitchSetNameAt(expr: BinaryenExpressionRef, index: Int, name: String)
     fun BinaryenSwitchSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
     fun BinaryenSwizzleVec8x16(): BinaryenOp
+    fun BinaryenTableGet(module: BinaryenModuleRef, name: String, index: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
+    fun BinaryenTableGetGetIndex(expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableGetGetTable(expr: BinaryenExpressionRef): String
+    fun BinaryenTableGetId(): BinaryenExpressionId
     fun BinaryenTableGetInitial(table: BinaryenTableRef): Int
     fun BinaryenTableGetMax(table: BinaryenTableRef): Int
     fun BinaryenTableGetName(table: BinaryenTableRef): String
+    fun BinaryenTableGetSetIndex(expr: BinaryenExpressionRef, indexExpr: BinaryenExpressionRef)
+    fun BinaryenTableGetSetTable(expr: BinaryenExpressionRef, table: String)
+    fun BinaryenTableGrow(module: BinaryenModuleRef, name: String, value: BinaryenExpressionRef, delta: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableGrowGetDelta(expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableGrowGetTable(expr: BinaryenExpressionRef): String
+    fun BinaryenTableGrowGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableGrowId(): BinaryenExpressionId
+    fun BinaryenTableGrowSetDelta(expr: BinaryenExpressionRef, deltaExpr: BinaryenExpressionRef)
+    fun BinaryenTableGrowSetTable(expr: BinaryenExpressionRef, table: String)
+    fun BinaryenTableGrowSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
     fun BinaryenTableHasMax(table: BinaryenTableRef): Boolean
     fun BinaryenTableImportGetBase(import: BinaryenTableRef): String
     fun BinaryenTableImportGetModule(import: BinaryenTableRef): String
+    fun BinaryenTableSet(module: BinaryenModuleRef, name: String, index: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableSetGetIndex(expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableSetGetTable(expr: BinaryenExpressionRef): String
+    fun BinaryenTableSetGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRef
+    fun BinaryenTableSetId(): BinaryenExpressionId
     fun BinaryenTableSetInitial(table: BinaryenTableRef, initial: Int)
     fun BinaryenTableSetMax(table: BinaryenTableRef, max: Int)
     fun BinaryenTableSetName(table: BinaryenTableRef, name: String)
+    fun BinaryenTableSetSetIndex(expr: BinaryenExpressionRef, indexExpr: BinaryenExpressionRef)
+    fun BinaryenTableSetSetTable(expr: BinaryenExpressionRef, table: String)
+    fun BinaryenTableSetSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
+    fun BinaryenTableSize(module: BinaryenModuleRef, name: String): BinaryenExpressionRef
+    fun BinaryenTableSizeGetTable(expr: BinaryenExpressionRef): String
+    fun BinaryenTableSizeId(): BinaryenExpressionId
+    fun BinaryenTableSizeSetTable(expr: BinaryenExpressionRef, table: String)
     fun BinaryenTagGetName(tag: BinaryenTagRef): String
     fun BinaryenTagGetParams(tag: BinaryenTagRef): BinaryenType
     fun BinaryenTagGetResults(tag: BinaryenTagRef): BinaryenType
