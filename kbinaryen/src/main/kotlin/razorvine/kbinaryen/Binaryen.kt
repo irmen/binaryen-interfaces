@@ -361,6 +361,7 @@ interface Binaryen: Library {
     fun BinaryenFeatureAtomics(): BinaryenFeatures
     fun BinaryenFeatureBulkMemory(): BinaryenFeatures
     fun BinaryenFeatureExceptionHandling(): BinaryenFeatures
+    fun BinaryenFeatureExtendedConst(): BinaryenFeatures
     fun BinaryenFeatureGC(): BinaryenFeatures
     fun BinaryenFeatureMVP(): BinaryenFeatures
     fun BinaryenFeatureMemory64(): BinaryenFeatures
@@ -957,7 +958,7 @@ interface Binaryen: Library {
     fun BinaryenSwitchSetDefaultName(expr: BinaryenExpressionRef, name: String)
     fun BinaryenSwitchSetNameAt(expr: BinaryenExpressionRef, index: Int, name: String)
     fun BinaryenSwitchSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
-    fun BinaryenSwizzleVec8x16(): BinaryenOp
+    fun BinaryenSwizzleVecI8x16(): BinaryenOp
     fun BinaryenTableGet(module: BinaryenModuleRef, name: String, index: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
     fun BinaryenTableGetGetIndex(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenTableGetGetTable(expr: BinaryenExpressionRef): String
@@ -1110,5 +1111,4 @@ interface Binaryen: Library {
     fun RelooperAddBranchForSwitch(from: RelooperBlockRef, to: RelooperBlockRef, indexes: LongArray?, numIndexes: Int, code: BinaryenExpressionRef)
     fun RelooperCreate(module: BinaryenModuleRef): RelooperRef
     fun RelooperRenderAndDispose(relooper: RelooperRef, entry: RelooperBlockRef, labelHelper: Int): BinaryenExpressionRef
-
 }

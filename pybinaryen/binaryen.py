@@ -5,7 +5,7 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.10"
+__version__ = "1.11"
 
 from _binaryen import ffi, lib
 
@@ -340,6 +340,7 @@ FeatureAll = lib.BinaryenFeatureAll
 FeatureAtomics = lib.BinaryenFeatureAtomics
 FeatureBulkMemory = lib.BinaryenFeatureBulkMemory
 FeatureExceptionHandling = lib.BinaryenFeatureExceptionHandling
+FeatureExtendedConst = lib.BinaryenFeatureExtendedConst
 FeatureGC = lib.BinaryenFeatureGC
 FeatureMVP = lib.BinaryenFeatureMVP
 FeatureMemory64 = lib.BinaryenFeatureMemory64
@@ -936,7 +937,7 @@ SwitchSetCondition = lib.BinaryenSwitchSetCondition
 SwitchSetDefaultName = lib.BinaryenSwitchSetDefaultName
 SwitchSetNameAt = lib.BinaryenSwitchSetNameAt
 SwitchSetValue = lib.BinaryenSwitchSetValue
-SwizzleVec8x16 = lib.BinaryenSwizzleVec8x16
+SwizzleVecI8x16 = lib.BinaryenSwizzleVecI8x16
 TableGet = lib.BinaryenTableGet
 TableGetGetIndex = lib.BinaryenTableGetGetIndex
 TableGetGetTable = lib.BinaryenTableGetGetTable
