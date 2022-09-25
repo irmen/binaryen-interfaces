@@ -48,7 +48,7 @@ def parse_header_file():
 headerfile, ffi_c_source = parse_header_file()
 ffibuilder = FFI()
 ffibuilder.cdef(headerfile)
-ffibuilder.set_source("_binaryen", ffi_c_source, libraries=['binaryen'])
+ffibuilder.set_source("_binaryen", ffi_c_source, libraries=['binaryen', 'stdc++'])
 
 
 if __name__ == "__main__":
