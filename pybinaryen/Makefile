@@ -4,8 +4,7 @@ all:
 	@echo "Targets:  test, dist, win_wheels, linux_wheel, check_upload, upload"
 
 test:
-	python setup.py test
-
+	tox
 
 win_wheels:
 	cmd /C del /q dist\*

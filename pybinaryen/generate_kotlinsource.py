@@ -1,5 +1,4 @@
 import inspect
-from build_ffi_module import parse_header_file
 import binaryen
 
 
@@ -31,7 +30,7 @@ def ctype_to_kotlin(ctype):
         return "LongArray"
     elif ctype.endswith("*"):
         return "Array<{}>".format(ctype_to_kotlin(ctype[:-1]))
-    elif ctype.startswith(("Binary", "Relooper", "ExpressionRunner")):
+    elif ctype.startswith(("Binary", "Relooper", "ExpressionRunner", "TypeBuilder")):
         return ctype
     else:
         raise NotImplementedError("ctype: '"+ctype+"'")
@@ -59,7 +58,7 @@ def create_typedefs(headerlines):
 
 
 def create_kotlin():
-    headerlines = parse_header_file()[0].splitlines()
+    headerlines = binaryen.parse_header_file().splitlines()
     print("""
 // ---------------------- KOTLIN SOURCE -----------------
 import com.sun.jna.Library
@@ -73,7 +72,7 @@ import com.sun.jna.Structure
 
     print("\n// functions:")
 
-    functions = inspect.getmembers(binaryen.lib, inspect.isroutine)
+    functions = inspect.getmembers(binaryen.lib)
     for name, func in functions:
         args, result = signature(name, func, headerlines)
         if result:
