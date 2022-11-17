@@ -14,6 +14,28 @@ You may need to add something to your link library search path to let python pic
 
 Software license: MIT
 
+## Installation
+
+This Python package expects binaryen to be installed in `/usr/include/` and `/usr/lib/`. On some Linux distributions community packages are available which install Binaryen in the correct place, have a search first to see if that's available for your distribution.
+
+For distributions that don't have this, you [build from source](https://github.com/WebAssembly/binaryen) or download a release from https://github.com/WebAssembly/binaryen/releases and install it manually.
+
+### Manual Installation
+
+Manual installation can be done by extracting the archive, and copying (or symlinking) the files in it to the appropriate location in `/usr/`.
+
+As an example here is what this might look like in GitHub Actions CI (for Ubuntu 22.04):
+
+```yaml
+    - name: Install Binaryen
+      run: |
+        wget https://github.com/WebAssembly/binaryen/releases/download/version_109/binaryen-version_109-x86_64-linux.tar.gz
+        tar -xf binaryen-version_109-x86_64-linux.tar.gz
+        sudo ln -s $PWD/binaryen-version_109/include/binaryen-c.h /usr/include/binaryen-c.h
+        sudo ln -s $PWD/binaryen-version_109/include/wasm-delegations.def /usr/include/wasm-delegations.def
+        sudo ln -s $PWD/binaryen-version_109/lib/libbinaryen.a /usr/lib/libbinaryen.a
+```
+
 ## Example
 
 Running the following code:
