@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.12"
-__binaryen_lib_version__ = "110"
+__version__ = "1.13"
+__binaryen_lib_version__ = "111"
 
 
 import os
@@ -191,6 +191,9 @@ try:
     ArraySetSetIndex = lib.BinaryenArraySetSetIndex
     ArraySetSetRef = lib.BinaryenArraySetSetRef
     ArraySetSetValue = lib.BinaryenArraySetSetValue
+    ArrayTypeGetElementPackedType = lib.BinaryenArrayTypeGetElementPackedType
+    ArrayTypeGetElementType = lib.BinaryenArrayTypeGetElementType
+    ArrayTypeIsElementMutable = lib.BinaryenArrayTypeIsElementMutable
     AtomicCmpxchg = lib.BinaryenAtomicCmpxchg
     AtomicCmpxchgGetBytes = lib.BinaryenAtomicCmpxchgGetBytes
     AtomicCmpxchgGetExpected = lib.BinaryenAtomicCmpxchgGetExpected
@@ -593,11 +596,22 @@ try:
     GtVecF64x2 = lib.BinaryenGtVecF64x2
     HasMemory = lib.BinaryenHasMemory
     HeapTypeAny = lib.BinaryenHeapTypeAny
+    HeapTypeArray = lib.BinaryenHeapTypeArray
     HeapTypeData = lib.BinaryenHeapTypeData
     HeapTypeEq = lib.BinaryenHeapTypeEq
     HeapTypeExt = lib.BinaryenHeapTypeExt
     HeapTypeFunc = lib.BinaryenHeapTypeFunc
+    HeapTypeGetBottom = lib.BinaryenHeapTypeGetBottom
     HeapTypeI31 = lib.BinaryenHeapTypeI31
+    HeapTypeIsArray = lib.BinaryenHeapTypeIsArray
+    HeapTypeIsBasic = lib.BinaryenHeapTypeIsBasic
+    HeapTypeIsBottom = lib.BinaryenHeapTypeIsBottom
+    HeapTypeIsSignature = lib.BinaryenHeapTypeIsSignature
+    HeapTypeIsStruct = lib.BinaryenHeapTypeIsStruct
+    HeapTypeIsSubType = lib.BinaryenHeapTypeIsSubType
+    HeapTypeNoext = lib.BinaryenHeapTypeNoext
+    HeapTypeNofunc = lib.BinaryenHeapTypeNofunc
+    HeapTypeNone = lib.BinaryenHeapTypeNone
     HeapTypeString = lib.BinaryenHeapTypeString
     HeapTypeStringviewIter = lib.BinaryenHeapTypeStringviewIter
     HeapTypeStringviewWTF16 = lib.BinaryenHeapTypeStringviewWTF16
@@ -1054,6 +1068,8 @@ try:
     SideEffectWritesLocal = lib.BinaryenSideEffectWritesLocal
     SideEffectWritesMemory = lib.BinaryenSideEffectWritesMemory
     SideEffectWritesTable = lib.BinaryenSideEffectWritesTable
+    SignatureTypeGetParams = lib.BinaryenSignatureTypeGetParams
+    SignatureTypeGetResults = lib.BinaryenSignatureTypeGetResults
     SplatVecF32x4 = lib.BinaryenSplatVecF32x4
     SplatVecF64x2 = lib.BinaryenSplatVecF64x2
     SplatVecI16x8 = lib.BinaryenSplatVecI16x8
@@ -1226,6 +1242,10 @@ try:
     StructSetSetIndex = lib.BinaryenStructSetSetIndex
     StructSetSetRef = lib.BinaryenStructSetSetRef
     StructSetSetValue = lib.BinaryenStructSetSetValue
+    StructTypeGetFieldPackedType = lib.BinaryenStructTypeGetFieldPackedType
+    StructTypeGetFieldType = lib.BinaryenStructTypeGetFieldType
+    StructTypeGetNumFields = lib.BinaryenStructTypeGetNumFields
+    StructTypeIsFieldMutable = lib.BinaryenStructTypeIsFieldMutable
     SubFloat32 = lib.BinaryenSubFloat32
     SubFloat64 = lib.BinaryenSubFloat64
     SubInt32 = lib.BinaryenSubInt32
@@ -1367,6 +1387,7 @@ try:
     TupleMakeSetOperandAt = lib.BinaryenTupleMakeSetOperandAt
     TypeAnyref = lib.BinaryenTypeAnyref
     TypeArity = lib.BinaryenTypeArity
+    TypeArrayref = lib.BinaryenTypeArrayref
     TypeAuto = lib.BinaryenTypeAuto
     TypeCreate = lib.BinaryenTypeCreate
     TypeDataref = lib.BinaryenTypeDataref
@@ -1383,6 +1404,9 @@ try:
     TypeInt64 = lib.BinaryenTypeInt64
     TypeIsNullable = lib.BinaryenTypeIsNullable
     TypeNone = lib.BinaryenTypeNone
+    TypeNullExternref = lib.BinaryenTypeNullExternref
+    TypeNullFuncref = lib.BinaryenTypeNullFuncref
+    TypeNullref = lib.BinaryenTypeNullref
     TypeStringref = lib.BinaryenTypeStringref
     TypeStringviewIter = lib.BinaryenTypeStringviewIter
     TypeStringviewWTF16 = lib.BinaryenTypeStringviewWTF16

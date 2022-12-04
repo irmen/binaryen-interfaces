@@ -1,13 +1,22 @@
 package razorvine.kbinaryen
 
 // ---------------------- KOTLIN SOURCE -----------------
-import com.sun.jna.Library
-import com.sun.jna.Native
-import com.sun.jna.Platform
-import com.sun.jna.Pointer
-import com.sun.jna.Structure
+import com.sun.jna.*
 
 // typealiases:
+class BinaryenModule: Structure()
+class BinaryenExpression: Structure()
+class BinaryenFunction: Structure()
+class BinaryenMemory: Structure()
+class BinaryenExport: Structure()
+class BinaryenGlobal: Structure()
+class BinaryenTag: Structure()
+class BinaryenTable: Structure()
+class BinaryenElementSegment: Structure()
+class Relooper: Structure()
+class RelooperBlock: Structure()
+class CExpressionRunner: Structure()
+class TypeBuilder: Structure()
 typealias BinaryenIndex = Int
 typealias BinaryenType = Long
 typealias BinaryenPackedType = Int
@@ -55,8 +64,6 @@ interface Binaryen: Library {
 //            Native.register(Binaryen::class.java, library)
 //        }
     }
-
-    // functions:
 
     // functions:
     fun BinaryenAbsFloat32(): BinaryenOp
@@ -120,7 +127,7 @@ interface Binaryen: Library {
     fun BinaryenArrayCopySetLength(expr: BinaryenExpressionRef, lengthExpr: BinaryenExpressionRef)
     fun BinaryenArrayCopySetSrcIndex(expr: BinaryenExpressionRef, srcIndexExpr: BinaryenExpressionRef)
     fun BinaryenArrayCopySetSrcRef(expr: BinaryenExpressionRef, srcRefExpr: BinaryenExpressionRef)
-    fun BinaryenArrayGet(module: BinaryenModuleRef, ref: BinaryenExpressionRef, index: BinaryenExpressionRef, signed_: Boolean): BinaryenExpressionRef
+    fun BinaryenArrayGet(module: BinaryenModuleRef, ref: BinaryenExpressionRef, index: BinaryenExpressionRef, type: BinaryenType, signed_: Boolean): BinaryenExpressionRef
     fun BinaryenArrayGetGetIndex(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenArrayGetGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
     fun BinaryenArrayGetId(): BinaryenExpressionId
@@ -154,6 +161,9 @@ interface Binaryen: Library {
     fun BinaryenArraySetSetIndex(expr: BinaryenExpressionRef, indexExpr: BinaryenExpressionRef)
     fun BinaryenArraySetSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
     fun BinaryenArraySetSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
+    fun BinaryenArrayTypeGetElementPackedType(heapType: BinaryenHeapType): BinaryenPackedType
+    fun BinaryenArrayTypeGetElementType(heapType: BinaryenHeapType): BinaryenType
+    fun BinaryenArrayTypeIsElementMutable(heapType: BinaryenHeapType): Boolean
     fun BinaryenAtomicCmpxchg(module: BinaryenModuleRef, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, expected: BinaryenExpressionRef, replacement: BinaryenExpressionRef, type: BinaryenType, memoryName: String): BinaryenExpressionRef
     fun BinaryenAtomicCmpxchgGetBytes(expr: BinaryenExpressionRef): Int
     fun BinaryenAtomicCmpxchgGetExpected(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -556,11 +566,22 @@ interface Binaryen: Library {
     fun BinaryenGtVecF64x2(): BinaryenOp
     fun BinaryenHasMemory(module: BinaryenModuleRef): Boolean
     fun BinaryenHeapTypeAny(): BinaryenHeapType
+    fun BinaryenHeapTypeArray(): BinaryenHeapType
     fun BinaryenHeapTypeData(): BinaryenHeapType
     fun BinaryenHeapTypeEq(): BinaryenHeapType
     fun BinaryenHeapTypeExt(): BinaryenHeapType
     fun BinaryenHeapTypeFunc(): BinaryenHeapType
+    fun BinaryenHeapTypeGetBottom(heapType: BinaryenHeapType): BinaryenHeapType
     fun BinaryenHeapTypeI31(): BinaryenHeapType
+    fun BinaryenHeapTypeIsArray(heapType: BinaryenHeapType): Boolean
+    fun BinaryenHeapTypeIsBasic(heapType: BinaryenHeapType): Boolean
+    fun BinaryenHeapTypeIsBottom(heapType: BinaryenHeapType): Boolean
+    fun BinaryenHeapTypeIsSignature(heapType: BinaryenHeapType): Boolean
+    fun BinaryenHeapTypeIsStruct(heapType: BinaryenHeapType): Boolean
+    fun BinaryenHeapTypeIsSubType(left: BinaryenHeapType, right: BinaryenHeapType): Boolean
+    fun BinaryenHeapTypeNoext(): BinaryenHeapType
+    fun BinaryenHeapTypeNofunc(): BinaryenHeapType
+    fun BinaryenHeapTypeNone(): BinaryenHeapType
     fun BinaryenHeapTypeString(): BinaryenHeapType
     fun BinaryenHeapTypeStringviewIter(): BinaryenHeapType
     fun BinaryenHeapTypeStringviewWTF16(): BinaryenHeapType
@@ -1017,6 +1038,8 @@ interface Binaryen: Library {
     fun BinaryenSideEffectWritesLocal(): BinaryenSideEffects
     fun BinaryenSideEffectWritesMemory(): BinaryenSideEffects
     fun BinaryenSideEffectWritesTable(): BinaryenSideEffects
+    fun BinaryenSignatureTypeGetParams(heapType: BinaryenHeapType): BinaryenType
+    fun BinaryenSignatureTypeGetResults(heapType: BinaryenHeapType): BinaryenType
     fun BinaryenSplatVecF32x4(): BinaryenOp
     fun BinaryenSplatVecF64x2(): BinaryenOp
     fun BinaryenSplatVecI16x8(): BinaryenOp
@@ -1189,6 +1212,10 @@ interface Binaryen: Library {
     fun BinaryenStructSetSetIndex(expr: BinaryenExpressionRef, index: Int)
     fun BinaryenStructSetSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
     fun BinaryenStructSetSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
+    fun BinaryenStructTypeGetFieldPackedType(heapType: BinaryenHeapType, index: Int): BinaryenPackedType
+    fun BinaryenStructTypeGetFieldType(heapType: BinaryenHeapType, index: Int): BinaryenType
+    fun BinaryenStructTypeGetNumFields(heapType: BinaryenHeapType): Int
+    fun BinaryenStructTypeIsFieldMutable(heapType: BinaryenHeapType, index: Int): Boolean
     fun BinaryenSubFloat32(): BinaryenOp
     fun BinaryenSubFloat64(): BinaryenOp
     fun BinaryenSubInt32(): BinaryenOp
@@ -1330,6 +1357,7 @@ interface Binaryen: Library {
     fun BinaryenTupleMakeSetOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
     fun BinaryenTypeAnyref(): BinaryenType
     fun BinaryenTypeArity(t: BinaryenType): Int
+    fun BinaryenTypeArrayref(): BinaryenType
     fun BinaryenTypeAuto(): BinaryenType
     fun BinaryenTypeCreate(valueTypes: LongArray?, numTypes: Int): BinaryenType
     fun BinaryenTypeDataref(): BinaryenType
@@ -1346,6 +1374,9 @@ interface Binaryen: Library {
     fun BinaryenTypeInt64(): BinaryenType
     fun BinaryenTypeIsNullable(type: BinaryenType): Boolean
     fun BinaryenTypeNone(): BinaryenType
+    fun BinaryenTypeNullExternref(): BinaryenType
+    fun BinaryenTypeNullFuncref(): BinaryenType
+    fun BinaryenTypeNullref(): BinaryenType
     fun BinaryenTypeStringref(): BinaryenType
     fun BinaryenTypeStringviewIter(): BinaryenType
     fun BinaryenTypeStringviewWTF16(): BinaryenType
@@ -1398,5 +1429,5 @@ interface Binaryen: Library {
     fun TypeBuilderSetBasicHeapType(builder: TypeBuilderRef, index: Int, basicHeapType: BinaryenBasicHeapType)
     fun TypeBuilderSetSignatureType(builder: TypeBuilderRef, index: Int, paramTypes: BinaryenType, resultTypes: BinaryenType)
     fun TypeBuilderSetStructType(builder: TypeBuilderRef, index: Int, fieldTypes: LongArray?, fieldPackedTypes: Array<BinaryenPackedType>?, fieldMutables: Array<Boolean>?, numFields: Int)
-    fun TypeBuilderSetSubType(builder: TypeBuilderRef, index: Int, superIndex: Int)
+    fun TypeBuilderSetSubType(builder: TypeBuilderRef, index: Int, superType: BinaryenHeapType)
 }
