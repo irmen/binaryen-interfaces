@@ -22,6 +22,7 @@ object MainTest {
         val adder: BinaryenFunctionRef = b.BinaryenAddFunction(module, "adder", params, results, null, 0, add)
 
         // Print it out
+        println("WRAPPER VERSION: ${Binaryen.VERSION}")
         println("WASM OUTPUT:")
         b.BinaryenModulePrint(module)
 

@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.13"
-__binaryen_lib_version__ = "111"
+__version__ = "1.112"
+__binaryen_lib_version__ = "112"
 
 
 import os
@@ -181,6 +181,7 @@ try:
     ArrayNewGetInit = lib.BinaryenArrayNewGetInit
     ArrayNewGetSize = lib.BinaryenArrayNewGetSize
     ArrayNewId = lib.BinaryenArrayNewId
+    ArrayNewSegId = lib.BinaryenArrayNewSegId
     ArrayNewSetInit = lib.BinaryenArrayNewSetInit
     ArrayNewSetSize = lib.BinaryenArrayNewSetSize
     ArraySet = lib.BinaryenArraySet
@@ -274,20 +275,14 @@ try:
     BrOn = lib.BinaryenBrOn
     BrOnCast = lib.BinaryenBrOnCast
     BrOnCastFail = lib.BinaryenBrOnCastFail
-    BrOnData = lib.BinaryenBrOnData
-    BrOnFunc = lib.BinaryenBrOnFunc
-    BrOnGetIntendedType = lib.BinaryenBrOnGetIntendedType
+    BrOnGetCastType = lib.BinaryenBrOnGetCastType
     BrOnGetName = lib.BinaryenBrOnGetName
     BrOnGetOp = lib.BinaryenBrOnGetOp
     BrOnGetRef = lib.BinaryenBrOnGetRef
-    BrOnI31 = lib.BinaryenBrOnI31
     BrOnId = lib.BinaryenBrOnId
-    BrOnNonData = lib.BinaryenBrOnNonData
-    BrOnNonFunc = lib.BinaryenBrOnNonFunc
-    BrOnNonI31 = lib.BinaryenBrOnNonI31
     BrOnNonNull = lib.BinaryenBrOnNonNull
     BrOnNull = lib.BinaryenBrOnNull
-    BrOnSetIntendedType = lib.BinaryenBrOnSetIntendedType
+    BrOnSetCastType = lib.BinaryenBrOnSetCastType
     BrOnSetName = lib.BinaryenBrOnSetName
     BrOnSetOp = lib.BinaryenBrOnSetOp
     BrOnSetRef = lib.BinaryenBrOnSetRef
@@ -395,6 +390,8 @@ try:
     DivUInt64 = lib.BinaryenDivUInt64
     DivVecF32x4 = lib.BinaryenDivVecF32x4
     DivVecF64x2 = lib.BinaryenDivVecF64x2
+    DotI8x16I7x16AddSToVecI32x4 = lib.BinaryenDotI8x16I7x16AddSToVecI32x4
+    DotI8x16I7x16SToVecI16x8 = lib.BinaryenDotI8x16I7x16SToVecI16x8
     DotSVecI16x8ToVecI32x4 = lib.BinaryenDotSVecI16x8ToVecI32x4
     Drop = lib.BinaryenDrop
     DropGetValue = lib.BinaryenDropGetValue
@@ -597,7 +594,6 @@ try:
     HasMemory = lib.BinaryenHasMemory
     HeapTypeAny = lib.BinaryenHeapTypeAny
     HeapTypeArray = lib.BinaryenHeapTypeArray
-    HeapTypeData = lib.BinaryenHeapTypeData
     HeapTypeEq = lib.BinaryenHeapTypeEq
     HeapTypeExt = lib.BinaryenHeapTypeExt
     HeapTypeFunc = lib.BinaryenHeapTypeFunc
@@ -616,6 +612,7 @@ try:
     HeapTypeStringviewIter = lib.BinaryenHeapTypeStringviewIter
     HeapTypeStringviewWTF16 = lib.BinaryenHeapTypeStringviewWTF16
     HeapTypeStringviewWTF8 = lib.BinaryenHeapTypeStringviewWTF8
+    HeapTypeStruct = lib.BinaryenHeapTypeStruct
     I31Get = lib.BinaryenI31Get
     I31GetGetI31 = lib.BinaryenI31GetGetI31
     I31GetId = lib.BinaryenI31GetId
@@ -635,6 +632,10 @@ try:
     IfSetIfFalse = lib.BinaryenIfSetIfFalse
     IfSetIfTrue = lib.BinaryenIfSetIfTrue
     InvalidId = lib.BinaryenInvalidId
+    LaneselectI16x8 = lib.BinaryenLaneselectI16x8
+    LaneselectI32x4 = lib.BinaryenLaneselectI32x4
+    LaneselectI64x2 = lib.BinaryenLaneselectI64x2
+    LaneselectI8x16 = lib.BinaryenLaneselectI8x16
     LeFloat32 = lib.BinaryenLeFloat32
     LeFloat64 = lib.BinaryenLeFloat64
     LeSInt32 = lib.BinaryenLeSInt32
@@ -862,22 +863,17 @@ try:
     PromoteLowVecF32x4ToVecF64x2 = lib.BinaryenPromoteLowVecF32x4ToVecF64x2
     Q15MulrSatSVecI16x8 = lib.BinaryenQ15MulrSatSVecI16x8
     RefAs = lib.BinaryenRefAs
-    RefAsData = lib.BinaryenRefAsData
     RefAsExternExternalize = lib.BinaryenRefAsExternExternalize
     RefAsExternInternalize = lib.BinaryenRefAsExternInternalize
-    RefAsFunc = lib.BinaryenRefAsFunc
     RefAsGetOp = lib.BinaryenRefAsGetOp
     RefAsGetValue = lib.BinaryenRefAsGetValue
-    RefAsI31 = lib.BinaryenRefAsI31
     RefAsId = lib.BinaryenRefAsId
     RefAsNonNull = lib.BinaryenRefAsNonNull
     RefAsSetOp = lib.BinaryenRefAsSetOp
     RefAsSetValue = lib.BinaryenRefAsSetValue
     RefCast = lib.BinaryenRefCast
-    RefCastGetIntendedType = lib.BinaryenRefCastGetIntendedType
     RefCastGetRef = lib.BinaryenRefCastGetRef
     RefCastId = lib.BinaryenRefCastId
-    RefCastSetIntendedType = lib.BinaryenRefCastSetIntendedType
     RefCastSetRef = lib.BinaryenRefCastSetRef
     RefEq = lib.BinaryenRefEq
     RefEqGetLeft = lib.BinaryenRefEqGetLeft
@@ -889,28 +885,36 @@ try:
     RefFuncGetFunc = lib.BinaryenRefFuncGetFunc
     RefFuncId = lib.BinaryenRefFuncId
     RefFuncSetFunc = lib.BinaryenRefFuncSetFunc
-    RefIs = lib.BinaryenRefIs
-    RefIsData = lib.BinaryenRefIsData
-    RefIsFunc = lib.BinaryenRefIsFunc
-    RefIsGetOp = lib.BinaryenRefIsGetOp
-    RefIsGetValue = lib.BinaryenRefIsGetValue
-    RefIsI31 = lib.BinaryenRefIsI31
-    RefIsId = lib.BinaryenRefIsId
     RefIsNull = lib.BinaryenRefIsNull
-    RefIsSetOp = lib.BinaryenRefIsSetOp
-    RefIsSetValue = lib.BinaryenRefIsSetValue
+    RefIsNullGetValue = lib.BinaryenRefIsNullGetValue
+    RefIsNullId = lib.BinaryenRefIsNullId
+    RefIsNullSetValue = lib.BinaryenRefIsNullSetValue
     RefNull = lib.BinaryenRefNull
     RefNullId = lib.BinaryenRefNullId
     RefTest = lib.BinaryenRefTest
-    RefTestGetIntendedType = lib.BinaryenRefTestGetIntendedType
+    RefTestGetCastType = lib.BinaryenRefTestGetCastType
     RefTestGetRef = lib.BinaryenRefTestGetRef
     RefTestId = lib.BinaryenRefTestId
-    RefTestSetIntendedType = lib.BinaryenRefTestSetIntendedType
+    RefTestSetCastType = lib.BinaryenRefTestSetCastType
     RefTestSetRef = lib.BinaryenRefTestSetRef
     ReinterpretFloat32 = lib.BinaryenReinterpretFloat32
     ReinterpretFloat64 = lib.BinaryenReinterpretFloat64
     ReinterpretInt32 = lib.BinaryenReinterpretInt32
     ReinterpretInt64 = lib.BinaryenReinterpretInt64
+    RelaxedFmaVecF32x4 = lib.BinaryenRelaxedFmaVecF32x4
+    RelaxedFmaVecF64x2 = lib.BinaryenRelaxedFmaVecF64x2
+    RelaxedFmsVecF32x4 = lib.BinaryenRelaxedFmsVecF32x4
+    RelaxedFmsVecF64x2 = lib.BinaryenRelaxedFmsVecF64x2
+    RelaxedMaxVecF32x4 = lib.BinaryenRelaxedMaxVecF32x4
+    RelaxedMaxVecF64x2 = lib.BinaryenRelaxedMaxVecF64x2
+    RelaxedMinVecF32x4 = lib.BinaryenRelaxedMinVecF32x4
+    RelaxedMinVecF64x2 = lib.BinaryenRelaxedMinVecF64x2
+    RelaxedQ15MulrSVecI16x8 = lib.BinaryenRelaxedQ15MulrSVecI16x8
+    RelaxedSwizzleVecI8x16 = lib.BinaryenRelaxedSwizzleVecI8x16
+    RelaxedTruncSVecF32x4ToVecI32x4 = lib.BinaryenRelaxedTruncSVecF32x4ToVecI32x4
+    RelaxedTruncUVecF32x4ToVecI32x4 = lib.BinaryenRelaxedTruncUVecF32x4ToVecI32x4
+    RelaxedTruncZeroSVecF64x2ToVecI32x4 = lib.BinaryenRelaxedTruncZeroSVecF64x2ToVecI32x4
+    RelaxedTruncZeroUVecF64x2ToVecI32x4 = lib.BinaryenRelaxedTruncZeroUVecF64x2ToVecI32x4
     RemSInt32 = lib.BinaryenRemSInt32
     RemSInt64 = lib.BinaryenRemSInt64
     RemUInt32 = lib.BinaryenRemUInt32
@@ -1136,10 +1140,14 @@ try:
     StringEncodeWTF8 = lib.BinaryenStringEncodeWTF8
     StringEncodeWTF8Array = lib.BinaryenStringEncodeWTF8Array
     StringEq = lib.BinaryenStringEq
+    StringEqCompare = lib.BinaryenStringEqCompare
+    StringEqEqual = lib.BinaryenStringEqEqual
     StringEqGetLeft = lib.BinaryenStringEqGetLeft
+    StringEqGetOp = lib.BinaryenStringEqGetOp
     StringEqGetRight = lib.BinaryenStringEqGetRight
     StringEqId = lib.BinaryenStringEqId
     StringEqSetLeft = lib.BinaryenStringEqSetLeft
+    StringEqSetOp = lib.BinaryenStringEqSetOp
     StringEqSetRight = lib.BinaryenStringEqSetRight
     StringIterMove = lib.BinaryenStringIterMove
     StringIterMoveAdvance = lib.BinaryenStringIterMoveAdvance
@@ -1167,12 +1175,14 @@ try:
     StringMeasureWTF16View = lib.BinaryenStringMeasureWTF16View
     StringMeasureWTF8 = lib.BinaryenStringMeasureWTF8
     StringNew = lib.BinaryenStringNew
+    StringNewFromCodePoint = lib.BinaryenStringNewFromCodePoint
     StringNewGetEnd = lib.BinaryenStringNewGetEnd
     StringNewGetLength = lib.BinaryenStringNewGetLength
     StringNewGetOp = lib.BinaryenStringNewGetOp
     StringNewGetPtr = lib.BinaryenStringNewGetPtr
     StringNewGetStart = lib.BinaryenStringNewGetStart
     StringNewId = lib.BinaryenStringNewId
+    StringNewIsTry = lib.BinaryenStringNewIsTry
     StringNewReplace = lib.BinaryenStringNewReplace
     StringNewReplaceArray = lib.BinaryenStringNewReplaceArray
     StringNewSetEnd = lib.BinaryenStringNewSetEnd
@@ -1180,6 +1190,7 @@ try:
     StringNewSetOp = lib.BinaryenStringNewSetOp
     StringNewSetPtr = lib.BinaryenStringNewSetPtr
     StringNewSetStart = lib.BinaryenStringNewSetStart
+    StringNewSetTry = lib.BinaryenStringNewSetTry
     StringNewUTF8 = lib.BinaryenStringNewUTF8
     StringNewUTF8Array = lib.BinaryenStringNewUTF8Array
     StringNewWTF16 = lib.BinaryenStringNewWTF16
@@ -1390,7 +1401,6 @@ try:
     TypeArrayref = lib.BinaryenTypeArrayref
     TypeAuto = lib.BinaryenTypeAuto
     TypeCreate = lib.BinaryenTypeCreate
-    TypeDataref = lib.BinaryenTypeDataref
     TypeEqref = lib.BinaryenTypeEqref
     TypeExpand = lib.BinaryenTypeExpand
     TypeExternref = lib.BinaryenTypeExternref
@@ -1411,7 +1421,7 @@ try:
     TypeStringviewIter = lib.BinaryenTypeStringviewIter
     TypeStringviewWTF16 = lib.BinaryenTypeStringviewWTF16
     TypeStringviewWTF8 = lib.BinaryenTypeStringviewWTF8
-    TypeSystemEquirecursive = lib.BinaryenTypeSystemEquirecursive
+    TypeStructref = lib.BinaryenTypeStructref
     TypeSystemIsorecursive = lib.BinaryenTypeSystemIsorecursive
     TypeSystemNominal = lib.BinaryenTypeSystemNominal
     TypeUnreachable = lib.BinaryenTypeUnreachable

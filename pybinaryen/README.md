@@ -10,7 +10,7 @@ That library has to be installed separately, make sure it is available on your s
 You may need to add something to your link library search path to let python pick it up.
 
 *Requires Python 3.6 or newer.  Also works on pypy3 (because it uses cffi).*
-*This release is compatible with binaryen library version 108.*
+*The minor version number of this library tracks the binaryen release number (such as 112)*
 
 Software license: MIT
 
