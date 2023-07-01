@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.112"
-__binaryen_lib_version__ = "112"
+__version__ = "1.113"
+__binaryen_lib_version__ = "113"
 
 
 import os
@@ -157,6 +157,7 @@ try:
     ArrayCopySetLength = lib.BinaryenArrayCopySetLength
     ArrayCopySetSrcIndex = lib.BinaryenArrayCopySetSrcIndex
     ArrayCopySetSrcRef = lib.BinaryenArrayCopySetSrcRef
+    ArrayFillId = lib.BinaryenArrayFillId
     ArrayGet = lib.BinaryenArrayGet
     ArrayGetGetIndex = lib.BinaryenArrayGetGetIndex
     ArrayGetGetRef = lib.BinaryenArrayGetGetRef
@@ -165,23 +166,26 @@ try:
     ArrayGetSetIndex = lib.BinaryenArrayGetSetIndex
     ArrayGetSetRef = lib.BinaryenArrayGetSetRef
     ArrayGetSetSigned = lib.BinaryenArrayGetSetSigned
-    ArrayInit = lib.BinaryenArrayInit
-    ArrayInitAppendValue = lib.BinaryenArrayInitAppendValue
-    ArrayInitGetNumValues = lib.BinaryenArrayInitGetNumValues
-    ArrayInitGetValueAt = lib.BinaryenArrayInitGetValueAt
-    ArrayInitId = lib.BinaryenArrayInitId
-    ArrayInitInsertValueAt = lib.BinaryenArrayInitInsertValueAt
-    ArrayInitRemoveValueAt = lib.BinaryenArrayInitRemoveValueAt
-    ArrayInitSetValueAt = lib.BinaryenArrayInitSetValueAt
+    ArrayInitDataId = lib.BinaryenArrayInitDataId
+    ArrayInitElemId = lib.BinaryenArrayInitElemId
     ArrayLen = lib.BinaryenArrayLen
     ArrayLenGetRef = lib.BinaryenArrayLenGetRef
     ArrayLenId = lib.BinaryenArrayLenId
     ArrayLenSetRef = lib.BinaryenArrayLenSetRef
     ArrayNew = lib.BinaryenArrayNew
+    ArrayNewDataId = lib.BinaryenArrayNewDataId
+    ArrayNewElemId = lib.BinaryenArrayNewElemId
+    ArrayNewFixed = lib.BinaryenArrayNewFixed
+    ArrayNewFixedAppendValue = lib.BinaryenArrayNewFixedAppendValue
+    ArrayNewFixedGetNumValues = lib.BinaryenArrayNewFixedGetNumValues
+    ArrayNewFixedGetValueAt = lib.BinaryenArrayNewFixedGetValueAt
+    ArrayNewFixedId = lib.BinaryenArrayNewFixedId
+    ArrayNewFixedInsertValueAt = lib.BinaryenArrayNewFixedInsertValueAt
+    ArrayNewFixedRemoveValueAt = lib.BinaryenArrayNewFixedRemoveValueAt
+    ArrayNewFixedSetValueAt = lib.BinaryenArrayNewFixedSetValueAt
     ArrayNewGetInit = lib.BinaryenArrayNewGetInit
     ArrayNewGetSize = lib.BinaryenArrayNewGetSize
     ArrayNewId = lib.BinaryenArrayNewId
-    ArrayNewSegId = lib.BinaryenArrayNewSegId
     ArrayNewSetInit = lib.BinaryenArrayNewSetInit
     ArrayNewSetSize = lib.BinaryenArrayNewSetSize
     ArraySet = lib.BinaryenArraySet
@@ -558,7 +562,6 @@ try:
     GetTable = lib.BinaryenGetTable
     GetTableByIndex = lib.BinaryenGetTableByIndex
     GetTag = lib.BinaryenGetTag
-    GetTypeSystem = lib.BinaryenGetTypeSystem
     GetZeroFilledMemory = lib.BinaryenGetZeroFilledMemory
     GlobalGet = lib.BinaryenGlobalGet
     GlobalGetGetName = lib.BinaryenGlobalGetGetName
@@ -1035,7 +1038,6 @@ try:
     SetPassArgument = lib.BinaryenSetPassArgument
     SetShrinkLevel = lib.BinaryenSetShrinkLevel
     SetStart = lib.BinaryenSetStart
-    SetTypeSystem = lib.BinaryenSetTypeSystem
     SetZeroFilledMemory = lib.BinaryenSetZeroFilledMemory
     ShlInt32 = lib.BinaryenShlInt32
     ShlInt64 = lib.BinaryenShlInt64
@@ -1129,6 +1131,8 @@ try:
     StringEncodeGetRef = lib.BinaryenStringEncodeGetRef
     StringEncodeGetStart = lib.BinaryenStringEncodeGetStart
     StringEncodeId = lib.BinaryenStringEncodeId
+    StringEncodeLossyUTF8 = lib.BinaryenStringEncodeLossyUTF8
+    StringEncodeLossyUTF8Array = lib.BinaryenStringEncodeLossyUTF8Array
     StringEncodeSetOp = lib.BinaryenStringEncodeSetOp
     StringEncodeSetPtr = lib.BinaryenStringEncodeSetPtr
     StringEncodeSetRef = lib.BinaryenStringEncodeSetRef
@@ -1183,8 +1187,8 @@ try:
     StringNewGetStart = lib.BinaryenStringNewGetStart
     StringNewId = lib.BinaryenStringNewId
     StringNewIsTry = lib.BinaryenStringNewIsTry
-    StringNewReplace = lib.BinaryenStringNewReplace
-    StringNewReplaceArray = lib.BinaryenStringNewReplaceArray
+    StringNewLossyUTF8 = lib.BinaryenStringNewLossyUTF8
+    StringNewLossyUTF8Array = lib.BinaryenStringNewLossyUTF8Array
     StringNewSetEnd = lib.BinaryenStringNewSetEnd
     StringNewSetLength = lib.BinaryenStringNewSetLength
     StringNewSetOp = lib.BinaryenStringNewSetOp
@@ -1422,8 +1426,6 @@ try:
     TypeStringviewWTF16 = lib.BinaryenTypeStringviewWTF16
     TypeStringviewWTF8 = lib.BinaryenTypeStringviewWTF8
     TypeStructref = lib.BinaryenTypeStructref
-    TypeSystemIsorecursive = lib.BinaryenTypeSystemIsorecursive
-    TypeSystemNominal = lib.BinaryenTypeSystemNominal
     TypeUnreachable = lib.BinaryenTypeUnreachable
     TypeVec128 = lib.BinaryenTypeVec128
     Unary = lib.BinaryenUnary
@@ -1458,15 +1460,12 @@ try:
     TypeBuilderErrorReasonForwardSupertypeReference = lib.TypeBuilderErrorReasonForwardSupertypeReference
     TypeBuilderErrorReasonInvalidSupertype = lib.TypeBuilderErrorReasonInvalidSupertype
     TypeBuilderErrorReasonSelfSupertype = lib.TypeBuilderErrorReasonSelfSupertype
-    TypeBuilderGetBasic = lib.TypeBuilderGetBasic
     TypeBuilderGetSize = lib.TypeBuilderGetSize
     TypeBuilderGetTempHeapType = lib.TypeBuilderGetTempHeapType
     TypeBuilderGetTempRefType = lib.TypeBuilderGetTempRefType
     TypeBuilderGetTempTupleType = lib.TypeBuilderGetTempTupleType
     TypeBuilderGrow = lib.TypeBuilderGrow
-    TypeBuilderIsBasic = lib.TypeBuilderIsBasic
     TypeBuilderSetArrayType = lib.TypeBuilderSetArrayType
-    TypeBuilderSetBasicHeapType = lib.TypeBuilderSetBasicHeapType
     TypeBuilderSetSignatureType = lib.TypeBuilderSetSignatureType
     TypeBuilderSetStructType = lib.TypeBuilderSetStructType
     TypeBuilderSetSubType = lib.TypeBuilderSetSubType

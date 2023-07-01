@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.5.30"
+    kotlin("jvm") version "1.8.21"
     `maven-publish`
     application
 }
@@ -26,10 +26,6 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
-}
-
-configure<JavaPluginConvention> {
-    sourceCompatibility = JavaVersion.VERSION_11
 }
 
 tasks {
