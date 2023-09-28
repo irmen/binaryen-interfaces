@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.113"
-__binaryen_lib_version__ = "113"
+__version__ = "1.116"
+__binaryen_lib_version__ = "116"
 
 
 import os
@@ -111,6 +111,7 @@ try:
     AddFunction = lib.BinaryenAddFunction
     AddFunctionExport = lib.BinaryenAddFunctionExport
     AddFunctionImport = lib.BinaryenAddFunctionImport
+    AddFunctionWithHeapType = lib.BinaryenAddFunctionWithHeapType
     AddGlobal = lib.BinaryenAddGlobal
     AddGlobalExport = lib.BinaryenAddGlobalExport
     AddGlobalImport = lib.BinaryenAddGlobalImport
@@ -487,7 +488,7 @@ try:
     FeatureGC = lib.BinaryenFeatureGC
     FeatureMVP = lib.BinaryenFeatureMVP
     FeatureMemory64 = lib.BinaryenFeatureMemory64
-    FeatureMultiMemories = lib.BinaryenFeatureMultiMemories
+    FeatureMultiMemory = lib.BinaryenFeatureMultiMemory
     FeatureMultivalue = lib.BinaryenFeatureMultivalue
     FeatureMutableGlobals = lib.BinaryenFeatureMutableGlobals
     FeatureNontrappingFPToInt = lib.BinaryenFeatureNontrappingFPToInt
@@ -622,10 +623,6 @@ try:
     I31GetIsSigned = lib.BinaryenI31GetIsSigned
     I31GetSetI31 = lib.BinaryenI31GetSetI31
     I31GetSetSigned = lib.BinaryenI31GetSetSigned
-    I31New = lib.BinaryenI31New
-    I31NewGetValue = lib.BinaryenI31NewGetValue
-    I31NewId = lib.BinaryenI31NewId
-    I31NewSetValue = lib.BinaryenI31NewSetValue
     If = lib.BinaryenIf
     IfGetCondition = lib.BinaryenIfGetCondition
     IfGetIfFalse = lib.BinaryenIfGetIfFalse
@@ -888,6 +885,10 @@ try:
     RefFuncGetFunc = lib.BinaryenRefFuncGetFunc
     RefFuncId = lib.BinaryenRefFuncId
     RefFuncSetFunc = lib.BinaryenRefFuncSetFunc
+    RefI31 = lib.BinaryenRefI31
+    RefI31GetValue = lib.BinaryenRefI31GetValue
+    RefI31Id = lib.BinaryenRefI31Id
+    RefI31SetValue = lib.BinaryenRefI31SetValue
     RefIsNull = lib.BinaryenRefIsNull
     RefIsNullGetValue = lib.BinaryenRefIsNullGetValue
     RefIsNullId = lib.BinaryenRefIsNullId
@@ -1466,6 +1467,7 @@ try:
     TypeBuilderGetTempTupleType = lib.TypeBuilderGetTempTupleType
     TypeBuilderGrow = lib.TypeBuilderGrow
     TypeBuilderSetArrayType = lib.TypeBuilderSetArrayType
+    TypeBuilderSetOpen = lib.TypeBuilderSetOpen
     TypeBuilderSetSignatureType = lib.TypeBuilderSetSignatureType
     TypeBuilderSetStructType = lib.TypeBuilderSetStructType
     TypeBuilderSetSubType = lib.TypeBuilderSetSubType
