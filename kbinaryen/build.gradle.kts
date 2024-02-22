@@ -18,14 +18,13 @@ dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
-    implementation("net.java.dev.jna:jna:5.10.0")
+    implementation("net.java.dev.jna:jna:5.14.0")
 
-    // Use the Kotlin test library.
+    // Use the Kotlin test library. And JUnit.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    // Use the Kotlin JUnit5 integration.
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.4.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.4.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 tasks {
