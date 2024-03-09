@@ -56,7 +56,7 @@ interface Binaryen: Library {
         }
 
         val INSTANCE: Binaryen by lazy { Native.load("binaryen", Binaryen::class.java) }
-        val VERSION = "116"
+        val VERSION = "117"
 
 //        init {
 //            val library = NativeLibrary.getInstance("/usr/local/lib/libbinaryen.so")
@@ -143,6 +143,7 @@ fun BinaryenArrayLenGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenArrayLenId(): BinaryenExpressionId
 fun BinaryenArrayLenSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenArrayNew(module: BinaryenModuleRef, type: BinaryenHeapType, size: BinaryenExpressionRef, init: BinaryenExpressionRef): BinaryenExpressionRef
+fun BinaryenArrayNewData(module: BinaryenModuleRef, type: BinaryenHeapType, name: String, offset: BinaryenExpressionRef, size: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenArrayNewDataId(): BinaryenExpressionId
 fun BinaryenArrayNewElemId(): BinaryenExpressionId
 fun BinaryenArrayNewFixed(module: BinaryenModuleRef, type: BinaryenHeapType, values: Array<BinaryenExpressionRef>?, numValues: Int): BinaryenExpressionRef
@@ -333,6 +334,7 @@ fun BinaryenConstSetValueI64(expr: BinaryenExpressionRef, value: Long)
 fun BinaryenConstSetValueI64High(expr: BinaryenExpressionRef, valueHigh: Int)
 fun BinaryenConstSetValueI64Low(expr: BinaryenExpressionRef, valueLow: Int)
 fun BinaryenConstSetValueV128(expr: BinaryenExpressionRef, value: Byte)
+fun BinaryenContNewId(): BinaryenExpressionId
 fun BinaryenConvertLowSVecI32x4ToVecF64x2(): BinaryenOp
 fun BinaryenConvertLowUVecI32x4ToVecF64x2(): BinaryenOp
 fun BinaryenConvertSInt32ToFloat32(): BinaryenOp
@@ -345,7 +347,7 @@ fun BinaryenConvertUInt32ToFloat64(): BinaryenOp
 fun BinaryenConvertUInt64ToFloat32(): BinaryenOp
 fun BinaryenConvertUInt64ToFloat64(): BinaryenOp
 fun BinaryenConvertUVecI32x4ToVecF32x4(): BinaryenOp
-fun BinaryenCopyMemorySegmentData(module: BinaryenModuleRef, id: Int, buffer: String)
+fun BinaryenCopyMemorySegmentData(module: BinaryenModuleRef, segmentName: String, buffer: String)
 fun BinaryenCopySignFloat32(): BinaryenOp
 fun BinaryenCopySignFloat64(): BinaryenOp
 fun BinaryenCtzInt32(): BinaryenOp
@@ -471,6 +473,7 @@ fun BinaryenFloorFloat32(): BinaryenOp
 fun BinaryenFloorFloat64(): BinaryenOp
 fun BinaryenFloorVecF32x4(): BinaryenOp
 fun BinaryenFloorVecF64x2(): BinaryenOp
+fun BinaryenFunctionAddVar(func: BinaryenFunctionRef, type: BinaryenType): Int
 fun BinaryenFunctionGetBody(func: BinaryenFunctionRef): BinaryenExpressionRef
 fun BinaryenFunctionGetLocalName(func: BinaryenFunctionRef, index: Int): String
 fun BinaryenFunctionGetName(func: BinaryenFunctionRef): String
@@ -516,9 +519,9 @@ fun BinaryenGetFunctionByIndex(module: BinaryenModuleRef, index: Int): BinaryenF
 fun BinaryenGetGlobal(module: BinaryenModuleRef, name: String): BinaryenGlobalRef
 fun BinaryenGetGlobalByIndex(module: BinaryenModuleRef, index: Int): BinaryenGlobalRef
 fun BinaryenGetLowMemoryUnused(): Boolean
-fun BinaryenGetMemorySegmentByteLength(module: BinaryenModuleRef, id: Int): Int
-fun BinaryenGetMemorySegmentByteOffset(module: BinaryenModuleRef, id: Int): Int
-fun BinaryenGetMemorySegmentPassive(module: BinaryenModuleRef, id: Int): Boolean
+fun BinaryenGetMemorySegmentByteLength(module: BinaryenModuleRef, segmentName: String): Int
+fun BinaryenGetMemorySegmentByteOffset(module: BinaryenModuleRef, segmentName: String): Int
+fun BinaryenGetMemorySegmentPassive(module: BinaryenModuleRef, segmentName: String): Boolean
 fun BinaryenGetNumElementSegments(module: BinaryenModuleRef): Int
 fun BinaryenGetNumExports(module: BinaryenModuleRef): Int
 fun BinaryenGetNumFunctions(module: BinaryenModuleRef): Int
@@ -904,6 +907,7 @@ fun BinaryenReplaceLaneVecI16x8(): BinaryenOp
 fun BinaryenReplaceLaneVecI32x4(): BinaryenOp
 fun BinaryenReplaceLaneVecI64x2(): BinaryenOp
 fun BinaryenReplaceLaneVecI8x16(): BinaryenOp
+fun BinaryenResumeId(): BinaryenExpressionId
 fun BinaryenRethrow(module: BinaryenModuleRef, target: String): BinaryenExpressionRef
 fun BinaryenRethrowGetTarget(expr: BinaryenExpressionRef): String
 fun BinaryenRethrowId(): BinaryenExpressionId
@@ -1002,7 +1006,7 @@ fun BinaryenSetDebugInfo(on: Boolean)
 fun BinaryenSetFastMath(value: Boolean)
 fun BinaryenSetFlexibleInlineMaxSize(size: Int)
 fun BinaryenSetLowMemoryUnused(on: Boolean)
-fun BinaryenSetMemory(module: BinaryenModuleRef, initial: Int, maximum: Int, exportName: String, segments: Array<String>, segmentPassive: Array<Boolean>?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: LongArray?, numSegments: Int, shared: Boolean, memory64: Boolean, name: String)
+fun BinaryenSetMemory(module: BinaryenModuleRef, initial: Int, maximum: Int, exportName: String, segmentNames: Array<String>, segmentDatas: Array<String>, segmentPassives: Array<Boolean>?, segmentOffsets: Array<BinaryenExpressionRef>?, segmentSizes: LongArray?, numSegments: Int, shared: Boolean, memory64: Boolean, name: String)
 fun BinaryenSetOneCallerInlineMaxSize(size: Int)
 fun BinaryenSetOptimizeLevel(level: Int)
 fun BinaryenSetPassArgument(name: String, value: String)
@@ -1260,6 +1264,8 @@ fun BinaryenSwitchSetDefaultName(expr: BinaryenExpressionRef, name: String)
 fun BinaryenSwitchSetNameAt(expr: BinaryenExpressionRef, index: Int, name: String)
 fun BinaryenSwitchSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
 fun BinaryenSwizzleVecI8x16(): BinaryenOp
+fun BinaryenTableCopyId(): BinaryenExpressionId
+fun BinaryenTableFillId(): BinaryenExpressionId
 fun BinaryenTableGet(module: BinaryenModuleRef, name: String, index: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
 fun BinaryenTableGetGetIndex(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenTableGetGetTable(expr: BinaryenExpressionRef): String
@@ -1269,6 +1275,7 @@ fun BinaryenTableGetMax(table: BinaryenTableRef): Int
 fun BinaryenTableGetName(table: BinaryenTableRef): String
 fun BinaryenTableGetSetIndex(expr: BinaryenExpressionRef, indexExpr: BinaryenExpressionRef)
 fun BinaryenTableGetSetTable(expr: BinaryenExpressionRef, table: String)
+fun BinaryenTableGetType(table: BinaryenTableRef): BinaryenType
 fun BinaryenTableGrow(module: BinaryenModuleRef, name: String, value: BinaryenExpressionRef, delta: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenTableGrowGetDelta(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenTableGrowGetTable(expr: BinaryenExpressionRef): String
@@ -1291,6 +1298,7 @@ fun BinaryenTableSetName(table: BinaryenTableRef, name: String)
 fun BinaryenTableSetSetIndex(expr: BinaryenExpressionRef, indexExpr: BinaryenExpressionRef)
 fun BinaryenTableSetSetTable(expr: BinaryenExpressionRef, table: String)
 fun BinaryenTableSetSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
+fun BinaryenTableSetType(table: BinaryenTableRef, tableType: BinaryenType)
 fun BinaryenTableSize(module: BinaryenModuleRef, name: String): BinaryenExpressionRef
 fun BinaryenTableSizeGetTable(expr: BinaryenExpressionRef): String
 fun BinaryenTableSizeId(): BinaryenExpressionId
@@ -1307,6 +1315,7 @@ fun BinaryenThrowGetOperandAt(expr: BinaryenExpressionRef, index: Int): Binaryen
 fun BinaryenThrowGetTag(expr: BinaryenExpressionRef): String
 fun BinaryenThrowId(): BinaryenExpressionId
 fun BinaryenThrowInsertOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
+fun BinaryenThrowRefId(): BinaryenExpressionId
 fun BinaryenThrowRemoveOperandAt(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
 fun BinaryenThrowSetOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
 fun BinaryenThrowSetTag(expr: BinaryenExpressionRef, tagName: String)
@@ -1356,6 +1365,7 @@ fun BinaryenTrySetCatchBodyAt(expr: BinaryenExpressionRef, index: Int, catchExpr
 fun BinaryenTrySetCatchTagAt(expr: BinaryenExpressionRef, index: Int, catchTag: String)
 fun BinaryenTrySetDelegateTarget(expr: BinaryenExpressionRef, delegateTarget: String)
 fun BinaryenTrySetName(expr: BinaryenExpressionRef, name: String)
+fun BinaryenTryTableId(): BinaryenExpressionId
 fun BinaryenTupleExtract(module: BinaryenModuleRef, tuple: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
 fun BinaryenTupleExtractGetIndex(expr: BinaryenExpressionRef): Int
 fun BinaryenTupleExtractGetTuple(expr: BinaryenExpressionRef): BinaryenExpressionRef

@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.116"
-__binaryen_lib_version__ = "116"
+__version__ = "1.117"
+__binaryen_lib_version__ = "117"
 
 
 import os
@@ -174,6 +174,7 @@ try:
     ArrayLenId = lib.BinaryenArrayLenId
     ArrayLenSetRef = lib.BinaryenArrayLenSetRef
     ArrayNew = lib.BinaryenArrayNew
+    ArrayNewData = lib.BinaryenArrayNewData
     ArrayNewDataId = lib.BinaryenArrayNewDataId
     ArrayNewElemId = lib.BinaryenArrayNewElemId
     ArrayNewFixed = lib.BinaryenArrayNewFixed
@@ -364,6 +365,7 @@ try:
     ConstSetValueI64High = lib.BinaryenConstSetValueI64High
     ConstSetValueI64Low = lib.BinaryenConstSetValueI64Low
     ConstSetValueV128 = lib.BinaryenConstSetValueV128
+    ContNewId = lib.BinaryenContNewId
     ConvertLowSVecI32x4ToVecF64x2 = lib.BinaryenConvertLowSVecI32x4ToVecF64x2
     ConvertLowUVecI32x4ToVecF64x2 = lib.BinaryenConvertLowUVecI32x4ToVecF64x2
     ConvertSInt32ToFloat32 = lib.BinaryenConvertSInt32ToFloat32
@@ -502,6 +504,7 @@ try:
     FloorFloat64 = lib.BinaryenFloorFloat64
     FloorVecF32x4 = lib.BinaryenFloorVecF32x4
     FloorVecF64x2 = lib.BinaryenFloorVecF64x2
+    FunctionAddVar = lib.BinaryenFunctionAddVar
     FunctionGetBody = lib.BinaryenFunctionGetBody
     FunctionGetLocalName = lib.BinaryenFunctionGetLocalName
     FunctionGetName = lib.BinaryenFunctionGetName
@@ -935,6 +938,7 @@ try:
     ReplaceLaneVecI32x4 = lib.BinaryenReplaceLaneVecI32x4
     ReplaceLaneVecI64x2 = lib.BinaryenReplaceLaneVecI64x2
     ReplaceLaneVecI8x16 = lib.BinaryenReplaceLaneVecI8x16
+    ResumeId = lib.BinaryenResumeId
     Rethrow = lib.BinaryenRethrow
     RethrowGetTarget = lib.BinaryenRethrowGetTarget
     RethrowId = lib.BinaryenRethrowId
@@ -1291,6 +1295,8 @@ try:
     SwitchSetNameAt = lib.BinaryenSwitchSetNameAt
     SwitchSetValue = lib.BinaryenSwitchSetValue
     SwizzleVecI8x16 = lib.BinaryenSwizzleVecI8x16
+    TableCopyId = lib.BinaryenTableCopyId
+    TableFillId = lib.BinaryenTableFillId
     TableGet = lib.BinaryenTableGet
     TableGetGetIndex = lib.BinaryenTableGetGetIndex
     TableGetGetTable = lib.BinaryenTableGetGetTable
@@ -1300,6 +1306,7 @@ try:
     TableGetName = lib.BinaryenTableGetName
     TableGetSetIndex = lib.BinaryenTableGetSetIndex
     TableGetSetTable = lib.BinaryenTableGetSetTable
+    TableGetType = lib.BinaryenTableGetType
     TableGrow = lib.BinaryenTableGrow
     TableGrowGetDelta = lib.BinaryenTableGrowGetDelta
     TableGrowGetTable = lib.BinaryenTableGrowGetTable
@@ -1322,6 +1329,7 @@ try:
     TableSetSetIndex = lib.BinaryenTableSetSetIndex
     TableSetSetTable = lib.BinaryenTableSetSetTable
     TableSetSetValue = lib.BinaryenTableSetSetValue
+    TableSetType = lib.BinaryenTableSetType
     TableSize = lib.BinaryenTableSize
     TableSizeGetTable = lib.BinaryenTableSizeGetTable
     TableSizeId = lib.BinaryenTableSizeId
@@ -1338,6 +1346,7 @@ try:
     ThrowGetTag = lib.BinaryenThrowGetTag
     ThrowId = lib.BinaryenThrowId
     ThrowInsertOperandAt = lib.BinaryenThrowInsertOperandAt
+    ThrowRefId = lib.BinaryenThrowRefId
     ThrowRemoveOperandAt = lib.BinaryenThrowRemoveOperandAt
     ThrowSetOperandAt = lib.BinaryenThrowSetOperandAt
     ThrowSetTag = lib.BinaryenThrowSetTag
@@ -1387,6 +1396,7 @@ try:
     TrySetCatchTagAt = lib.BinaryenTrySetCatchTagAt
     TrySetDelegateTarget = lib.BinaryenTrySetDelegateTarget
     TrySetName = lib.BinaryenTrySetName
+    TryTableId = lib.BinaryenTryTableId
     TupleExtract = lib.BinaryenTupleExtract
     TupleExtractGetIndex = lib.BinaryenTupleExtractGetIndex
     TupleExtractGetTuple = lib.BinaryenTupleExtractGetTuple
