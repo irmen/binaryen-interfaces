@@ -56,7 +56,7 @@ interface Binaryen: Library {
         }
 
         val INSTANCE: Binaryen by lazy { Native.load("binaryen", Binaryen::class.java) }
-        val VERSION = "117"
+        val VERSION = "118"
 
 //        init {
 //            val library = NativeLibrary.getInstance("/usr/local/lib/libbinaryen.so")
@@ -75,6 +75,7 @@ fun BinaryenAbsVecI64x2(): BinaryenOp
 fun BinaryenAbsVecI8x16(): BinaryenOp
 fun BinaryenAddActiveElementSegment(module: BinaryenModuleRef, table: String, name: String, funcNames: Array<String>, numFuncNames: Int, offset: BinaryenExpressionRef): BinaryenElementSegmentRef
 fun BinaryenAddCustomSection(module: BinaryenModuleRef, name: String, contents: String, contentsSize: Int)
+fun BinaryenAddDataSegment(module: BinaryenModuleRef, segmentName: String, memoryName: String, segmentPassive: Boolean, segmentOffset: BinaryenExpressionRef, segmentData: String, segmentSize: Int)
 fun BinaryenAddFloat32(): BinaryenOp
 fun BinaryenAddFloat64(): BinaryenOp
 fun BinaryenAddFunction(module: BinaryenModuleRef, name: String, params: BinaryenType, results: BinaryenType, varTypes: LongArray?, numVarTypes: Int, body: BinaryenExpressionRef): BinaryenFunctionRef
@@ -334,6 +335,7 @@ fun BinaryenConstSetValueI64(expr: BinaryenExpressionRef, value: Long)
 fun BinaryenConstSetValueI64High(expr: BinaryenExpressionRef, valueHigh: Int)
 fun BinaryenConstSetValueI64Low(expr: BinaryenExpressionRef, valueLow: Int)
 fun BinaryenConstSetValueV128(expr: BinaryenExpressionRef, value: Byte)
+fun BinaryenContBindId(): BinaryenExpressionId
 fun BinaryenContNewId(): BinaryenExpressionId
 fun BinaryenConvertLowSVecI32x4ToVecF64x2(): BinaryenOp
 fun BinaryenConvertLowUVecI32x4ToVecF64x2(): BinaryenOp
@@ -585,9 +587,6 @@ fun BinaryenHeapTypeNoext(): BinaryenHeapType
 fun BinaryenHeapTypeNofunc(): BinaryenHeapType
 fun BinaryenHeapTypeNone(): BinaryenHeapType
 fun BinaryenHeapTypeString(): BinaryenHeapType
-fun BinaryenHeapTypeStringviewIter(): BinaryenHeapType
-fun BinaryenHeapTypeStringviewWTF16(): BinaryenHeapType
-fun BinaryenHeapTypeStringviewWTF8(): BinaryenHeapType
 fun BinaryenHeapTypeStruct(): BinaryenHeapType
 fun BinaryenI31Get(module: BinaryenModuleRef, i31: BinaryenExpressionRef, signed_: Boolean): BinaryenExpressionRef
 fun BinaryenI31GetGetI31(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -754,7 +753,7 @@ fun BinaryenMinVecF32x4(): BinaryenOp
 fun BinaryenMinVecF64x2(): BinaryenOp
 fun BinaryenModuleAddDebugInfoFileName(module: BinaryenModuleRef, filename: String): Int
 fun BinaryenModuleAllocateAndWrite(module: BinaryenModuleRef, sourceMapUrl: String): BinaryenModuleAllocateAndWriteResult
-fun BinaryenModuleAllocateAndWriteStackIR(module: BinaryenModuleRef, optimize: Boolean): String
+fun BinaryenModuleAllocateAndWriteStackIR(module: BinaryenModuleRef): String
 fun BinaryenModuleAllocateAndWriteText(module: BinaryenModuleRef): String
 fun BinaryenModuleAutoDrop(module: BinaryenModuleRef)
 fun BinaryenModuleCreate(): BinaryenModuleRef
@@ -766,8 +765,9 @@ fun BinaryenModuleOptimize(module: BinaryenModuleRef)
 fun BinaryenModuleParse(text: String): BinaryenModuleRef
 fun BinaryenModulePrint(module: BinaryenModuleRef)
 fun BinaryenModulePrintAsmjs(module: BinaryenModuleRef)
-fun BinaryenModulePrintStackIR(module: BinaryenModuleRef, optimize: Boolean)
+fun BinaryenModulePrintStackIR(module: BinaryenModuleRef)
 fun BinaryenModuleRead(input: String, inputSize: Int): BinaryenModuleRef
+fun BinaryenModuleReadWithFeatures(input: String, inputSize: Int, featureSet: BinaryenFeatures): BinaryenModuleRef
 fun BinaryenModuleRunPasses(module: BinaryenModuleRef, passes: Array<String>, numPasses: Int)
 fun BinaryenModuleSetFeatures(module: BinaryenModuleRef, features: BinaryenFeatures)
 fun BinaryenModuleSetFieldName(module: BinaryenModuleRef, heapType: BinaryenHeapType, index: Int, name: String)
@@ -775,7 +775,7 @@ fun BinaryenModuleSetTypeName(module: BinaryenModuleRef, heapType: BinaryenHeapT
 fun BinaryenModuleUpdateMaps(module: BinaryenModuleRef)
 fun BinaryenModuleValidate(module: BinaryenModuleRef): Boolean
 fun BinaryenModuleWrite(module: BinaryenModuleRef, output: String, outputSize: Int): Int
-fun BinaryenModuleWriteStackIR(module: BinaryenModuleRef, output: String, outputSize: Int, optimize: Boolean): Int
+fun BinaryenModuleWriteStackIR(module: BinaryenModuleRef, output: String, outputSize: Int): Int
 fun BinaryenModuleWriteText(module: BinaryenModuleRef, output: String, outputSize: Int): Int
 fun BinaryenModuleWriteWithSourceMap(module: BinaryenModuleRef, url: String, output: String, outputSize: Int, sourceMap: String, sourceMapSize: Int): BinaryenBufferSizes
 fun BinaryenMulFloat32(): BinaryenOp
@@ -835,6 +835,8 @@ fun BinaryenPromoteFloat32(): BinaryenOp
 fun BinaryenPromoteLowVecF32x4ToVecF64x2(): BinaryenOp
 fun BinaryenQ15MulrSatSVecI16x8(): BinaryenOp
 fun BinaryenRefAs(module: BinaryenModuleRef, op: BinaryenOp, value: BinaryenExpressionRef): BinaryenExpressionRef
+fun BinaryenRefAsAnyConvertExtern(): BinaryenOp
+fun BinaryenRefAsExternConvertAny(): BinaryenOp
 fun BinaryenRefAsExternExternalize(): BinaryenOp
 fun BinaryenRefAsExternInternalize(): BinaryenOp
 fun BinaryenRefAsGetOp(expr: BinaryenExpressionRef): BinaryenOp
@@ -1080,15 +1082,6 @@ fun BinaryenStoreSetOffset(expr: BinaryenExpressionRef, offset: Int)
 fun BinaryenStoreSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
 fun BinaryenStoreSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
 fun BinaryenStoreSetValueType(expr: BinaryenExpressionRef, valueType: BinaryenType)
-fun BinaryenStringAs(module: BinaryenModuleRef, op: BinaryenOp, ref: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringAsGetOp(expr: BinaryenExpressionRef): BinaryenOp
-fun BinaryenStringAsGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringAsId(): BinaryenExpressionId
-fun BinaryenStringAsIter(): BinaryenOp
-fun BinaryenStringAsSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
-fun BinaryenStringAsSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
-fun BinaryenStringAsWTF16(): BinaryenOp
-fun BinaryenStringAsWTF8(): BinaryenOp
 fun BinaryenStringConcat(module: BinaryenModuleRef, left: BinaryenExpressionRef, right: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringConcatGetLeft(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringConcatGetRight(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1100,23 +1093,17 @@ fun BinaryenStringConstGetString(expr: BinaryenExpressionRef): String
 fun BinaryenStringConstId(): BinaryenExpressionId
 fun BinaryenStringConstSetString(expr: BinaryenExpressionRef, stringStr: String)
 fun BinaryenStringEncode(module: BinaryenModuleRef, op: BinaryenOp, ref: BinaryenExpressionRef, ptr: BinaryenExpressionRef, start: BinaryenExpressionRef): BinaryenExpressionRef
+fun BinaryenStringEncodeGetArray(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringEncodeGetOp(expr: BinaryenExpressionRef): BinaryenOp
-fun BinaryenStringEncodeGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringEncodeGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringEncodeGetStart(expr: BinaryenExpressionRef): BinaryenExpressionRef
+fun BinaryenStringEncodeGetStr(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringEncodeId(): BinaryenExpressionId
-fun BinaryenStringEncodeLossyUTF8(): BinaryenOp
 fun BinaryenStringEncodeLossyUTF8Array(): BinaryenOp
+fun BinaryenStringEncodeSetArray(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
 fun BinaryenStringEncodeSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
-fun BinaryenStringEncodeSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
-fun BinaryenStringEncodeSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenStringEncodeSetStart(expr: BinaryenExpressionRef, startExpr: BinaryenExpressionRef)
-fun BinaryenStringEncodeUTF8(): BinaryenOp
-fun BinaryenStringEncodeUTF8Array(): BinaryenOp
-fun BinaryenStringEncodeWTF16(): BinaryenOp
+fun BinaryenStringEncodeSetStr(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenStringEncodeWTF16Array(): BinaryenOp
-fun BinaryenStringEncodeWTF8(): BinaryenOp
-fun BinaryenStringEncodeWTF8Array(): BinaryenOp
 fun BinaryenStringEq(module: BinaryenModuleRef, op: BinaryenOp, left: BinaryenExpressionRef, right: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringEqCompare(): BinaryenOp
 fun BinaryenStringEqEqual(): BinaryenOp
@@ -1127,70 +1114,33 @@ fun BinaryenStringEqId(): BinaryenExpressionId
 fun BinaryenStringEqSetLeft(expr: BinaryenExpressionRef, leftExpr: BinaryenExpressionRef)
 fun BinaryenStringEqSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
 fun BinaryenStringEqSetRight(expr: BinaryenExpressionRef, rightExpr: BinaryenExpressionRef)
-fun BinaryenStringIterMove(module: BinaryenModuleRef, op: BinaryenOp, ref: BinaryenExpressionRef, num: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringIterMoveAdvance(): BinaryenOp
-fun BinaryenStringIterMoveGetNum(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringIterMoveGetOp(expr: BinaryenExpressionRef): BinaryenOp
-fun BinaryenStringIterMoveGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringIterMoveId(): BinaryenExpressionId
-fun BinaryenStringIterMoveRewind(): BinaryenOp
-fun BinaryenStringIterMoveSetNum(expr: BinaryenExpressionRef, numExpr: BinaryenExpressionRef)
-fun BinaryenStringIterMoveSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
-fun BinaryenStringIterMoveSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
-fun BinaryenStringIterNext(module: BinaryenModuleRef, ref: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringIterNextGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringIterNextId(): BinaryenExpressionId
-fun BinaryenStringIterNextSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenStringMeasure(module: BinaryenModuleRef, op: BinaryenOp, ref: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringMeasureGetOp(expr: BinaryenExpressionRef): BinaryenOp
 fun BinaryenStringMeasureGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringMeasureId(): BinaryenExpressionId
-fun BinaryenStringMeasureIsUSV(): BinaryenOp
 fun BinaryenStringMeasureSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
 fun BinaryenStringMeasureSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenStringMeasureUTF8(): BinaryenOp
 fun BinaryenStringMeasureWTF16(): BinaryenOp
-fun BinaryenStringMeasureWTF16View(): BinaryenOp
-fun BinaryenStringMeasureWTF8(): BinaryenOp
-fun BinaryenStringNew(module: BinaryenModuleRef, op: BinaryenOp, ptr: BinaryenExpressionRef, length: BinaryenExpressionRef, start: BinaryenExpressionRef, end: BinaryenExpressionRef, try_: Boolean): BinaryenExpressionRef
+fun BinaryenStringNew(module: BinaryenModuleRef, op: BinaryenOp, ref: BinaryenExpressionRef, start: BinaryenExpressionRef, end: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringNewFromCodePoint(): BinaryenOp
 fun BinaryenStringNewGetEnd(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringNewGetLength(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringNewGetOp(expr: BinaryenExpressionRef): BinaryenOp
-fun BinaryenStringNewGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
+fun BinaryenStringNewGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringNewGetStart(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringNewId(): BinaryenExpressionId
-fun BinaryenStringNewIsTry(expr: BinaryenExpressionRef): Boolean
-fun BinaryenStringNewLossyUTF8(): BinaryenOp
 fun BinaryenStringNewLossyUTF8Array(): BinaryenOp
 fun BinaryenStringNewSetEnd(expr: BinaryenExpressionRef, endExpr: BinaryenExpressionRef)
-fun BinaryenStringNewSetLength(expr: BinaryenExpressionRef, lengthExpr: BinaryenExpressionRef)
 fun BinaryenStringNewSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
-fun BinaryenStringNewSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
+fun BinaryenStringNewSetRef(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
 fun BinaryenStringNewSetStart(expr: BinaryenExpressionRef, startExpr: BinaryenExpressionRef)
-fun BinaryenStringNewSetTry(expr: BinaryenExpressionRef, try_: Boolean)
-fun BinaryenStringNewUTF8(): BinaryenOp
-fun BinaryenStringNewUTF8Array(): BinaryenOp
-fun BinaryenStringNewWTF16(): BinaryenOp
 fun BinaryenStringNewWTF16Array(): BinaryenOp
-fun BinaryenStringNewWTF8(): BinaryenOp
-fun BinaryenStringNewWTF8Array(): BinaryenOp
-fun BinaryenStringSliceIter(module: BinaryenModuleRef, ref: BinaryenExpressionRef, num: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringSliceIterGetNum(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringSliceIterGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringSliceIterId(): BinaryenExpressionId
-fun BinaryenStringSliceIterSetNum(expr: BinaryenExpressionRef, numExpr: BinaryenExpressionRef)
-fun BinaryenStringSliceIterSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
-fun BinaryenStringSliceWTF(module: BinaryenModuleRef, op: BinaryenOp, ref: BinaryenExpressionRef, start: BinaryenExpressionRef, end: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringSliceWTF16(): BinaryenOp
-fun BinaryenStringSliceWTF8(): BinaryenOp
+fun BinaryenStringSliceWTF(module: BinaryenModuleRef, ref: BinaryenExpressionRef, start: BinaryenExpressionRef, end: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringSliceWTFGetEnd(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringSliceWTFGetOp(expr: BinaryenExpressionRef): BinaryenOp
 fun BinaryenStringSliceWTFGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringSliceWTFGetStart(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStringSliceWTFId(): BinaryenExpressionId
 fun BinaryenStringSliceWTFSetEnd(expr: BinaryenExpressionRef, endExpr: BinaryenExpressionRef)
-fun BinaryenStringSliceWTFSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
 fun BinaryenStringSliceWTFSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenStringSliceWTFSetStart(expr: BinaryenExpressionRef, startExpr: BinaryenExpressionRef)
 fun BinaryenStringWTF16Get(module: BinaryenModuleRef, ref: BinaryenExpressionRef, pos: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1199,14 +1149,6 @@ fun BinaryenStringWTF16GetGetRef(expr: BinaryenExpressionRef): BinaryenExpressio
 fun BinaryenStringWTF16GetId(): BinaryenExpressionId
 fun BinaryenStringWTF16GetSetPos(expr: BinaryenExpressionRef, posExpr: BinaryenExpressionRef)
 fun BinaryenStringWTF16GetSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
-fun BinaryenStringWTF8Advance(module: BinaryenModuleRef, ref: BinaryenExpressionRef, pos: BinaryenExpressionRef, bytes: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringWTF8AdvanceGetBytes(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringWTF8AdvanceGetPos(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringWTF8AdvanceGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
-fun BinaryenStringWTF8AdvanceId(): BinaryenExpressionId
-fun BinaryenStringWTF8AdvanceSetBytes(expr: BinaryenExpressionRef, bytesExpr: BinaryenExpressionRef)
-fun BinaryenStringWTF8AdvanceSetPos(expr: BinaryenExpressionRef, posExpr: BinaryenExpressionRef)
-fun BinaryenStringWTF8AdvanceSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
 fun BinaryenStructGet(module: BinaryenModuleRef, index: Int, ref: BinaryenExpressionRef, type: BinaryenType, signed_: Boolean): BinaryenExpressionRef
 fun BinaryenStructGetGetIndex(expr: BinaryenExpressionRef): Int
 fun BinaryenStructGetGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1249,6 +1191,7 @@ fun BinaryenSubVecI16x8(): BinaryenOp
 fun BinaryenSubVecI32x4(): BinaryenOp
 fun BinaryenSubVecI64x2(): BinaryenOp
 fun BinaryenSubVecI8x16(): BinaryenOp
+fun BinaryenSuspendId(): BinaryenExpressionId
 fun BinaryenSwitch(module: BinaryenModuleRef, names: Array<String>, numNames: Int, defaultName: String, condition: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenSwitchAppendName(expr: BinaryenExpressionRef, name: String): Int
 fun BinaryenSwitchGetCondition(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1402,9 +1345,6 @@ fun BinaryenTypeNullExternref(): BinaryenType
 fun BinaryenTypeNullFuncref(): BinaryenType
 fun BinaryenTypeNullref(): BinaryenType
 fun BinaryenTypeStringref(): BinaryenType
-fun BinaryenTypeStringviewIter(): BinaryenType
-fun BinaryenTypeStringviewWTF16(): BinaryenType
-fun BinaryenTypeStringviewWTF8(): BinaryenType
 fun BinaryenTypeStructref(): BinaryenType
 fun BinaryenTypeUnreachable(): BinaryenType
 fun BinaryenTypeVec128(): BinaryenType
@@ -1423,7 +1363,6 @@ fun BinaryenXorVec128(): BinaryenOp
 fun ExpressionRunnerCreate(module: BinaryenModuleRef, flags: ExpressionRunnerFlags, maxDepth: Int, maxLoopIterations: Int): ExpressionRunnerRef
 fun ExpressionRunnerFlagsDefault(): ExpressionRunnerFlags
 fun ExpressionRunnerFlagsPreserveSideeffects(): ExpressionRunnerFlags
-fun ExpressionRunnerFlagsTraverseCalls(): ExpressionRunnerFlags
 fun ExpressionRunnerRunAndDispose(runner: ExpressionRunnerRef, expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun ExpressionRunnerSetGlobalValue(runner: ExpressionRunnerRef, name: String, value: BinaryenExpressionRef): Boolean
 fun ExpressionRunnerSetLocalValue(runner: ExpressionRunnerRef, index: Int, value: BinaryenExpressionRef): Boolean
@@ -1451,4 +1390,3 @@ fun TypeBuilderSetSignatureType(builder: TypeBuilderRef, index: Int, paramTypes:
 fun TypeBuilderSetStructType(builder: TypeBuilderRef, index: Int, fieldTypes: LongArray?, fieldPackedTypes: Array<BinaryenPackedType>?, fieldMutables: Array<Boolean>?, numFields: Int)
 fun TypeBuilderSetSubType(builder: TypeBuilderRef, index: Int, superType: BinaryenHeapType)
 }
-

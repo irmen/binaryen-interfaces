@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "net.razorvine"
-version = "1.117-SNAPSHOT"
+version = "1.118-SNAPSHOT"
 
 repositories {
     mavenCentral()
