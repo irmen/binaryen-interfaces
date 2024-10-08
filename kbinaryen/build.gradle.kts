@@ -2,13 +2,13 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.9.24"
+    kotlin("jvm") version "2.0.20"
     `maven-publish`
     application
 }
 
 group = "net.razorvine"
-version = "1.118-SNAPSHOT"
+version = "1.119-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -23,7 +23,7 @@ dependencies {
     // Use the Kotlin test library. And JUnit.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

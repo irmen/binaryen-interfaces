@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.118"
-__binaryen_lib_version__ = "118"
+__version__ = "1.119"
+__binaryen_lib_version__ = "119"
 
 
 import os
@@ -120,6 +120,7 @@ try:
     AddInt64 = lib.BinaryenAddInt64
     AddMemoryExport = lib.BinaryenAddMemoryExport
     AddMemoryImport = lib.BinaryenAddMemoryImport
+    AddPassToSkip = lib.BinaryenAddPassToSkip
     AddPassiveElementSegment = lib.BinaryenAddPassiveElementSegment
     AddSatSVecI16x8 = lib.BinaryenAddSatSVecI16x8
     AddSatSVecI8x16 = lib.BinaryenAddSatSVecI8x16
@@ -348,6 +349,7 @@ try:
     CeilVecF32x4 = lib.BinaryenCeilVecF32x4
     CeilVecF64x2 = lib.BinaryenCeilVecF64x2
     ClearPassArguments = lib.BinaryenClearPassArguments
+    ClearPassesToSkip = lib.BinaryenClearPassesToSkip
     ClzInt32 = lib.BinaryenClzInt32
     ClzInt64 = lib.BinaryenClzInt64
     Const = lib.BinaryenConst
@@ -514,6 +516,7 @@ try:
     FunctionGetNumVars = lib.BinaryenFunctionGetNumVars
     FunctionGetParams = lib.BinaryenFunctionGetParams
     FunctionGetResults = lib.BinaryenFunctionGetResults
+    FunctionGetType = lib.BinaryenFunctionGetType
     FunctionGetVar = lib.BinaryenFunctionGetVar
     FunctionHasLocalName = lib.BinaryenFunctionHasLocalName
     FunctionImportGetBase = lib.BinaryenFunctionImportGetBase
@@ -523,6 +526,7 @@ try:
     FunctionSetBody = lib.BinaryenFunctionSetBody
     FunctionSetDebugLocation = lib.BinaryenFunctionSetDebugLocation
     FunctionSetLocalName = lib.BinaryenFunctionSetLocalName
+    FunctionSetType = lib.BinaryenFunctionSetType
     GeFloat32 = lib.BinaryenGeFloat32
     GeFloat64 = lib.BinaryenGeFloat64
     GeSInt32 = lib.BinaryenGeSInt32
@@ -540,6 +544,7 @@ try:
     GeVecF64x2 = lib.BinaryenGeVecF64x2
     GetAllowInliningFunctionsWithLoops = lib.BinaryenGetAllowInliningFunctionsWithLoops
     GetAlwaysInlineMaxSize = lib.BinaryenGetAlwaysInlineMaxSize
+    GetClosedWorld = lib.BinaryenGetClosedWorld
     GetDebugInfo = lib.BinaryenGetDebugInfo
     GetElementSegment = lib.BinaryenGetElementSegment
     GetElementSegmentByIndex = lib.BinaryenGetElementSegmentByIndex
@@ -549,6 +554,7 @@ try:
     GetFlexibleInlineMaxSize = lib.BinaryenGetFlexibleInlineMaxSize
     GetFunction = lib.BinaryenGetFunction
     GetFunctionByIndex = lib.BinaryenGetFunctionByIndex
+    GetGenerateStackIR = lib.BinaryenGetGenerateStackIR
     GetGlobal = lib.BinaryenGetGlobal
     GetGlobalByIndex = lib.BinaryenGetGlobalByIndex
     GetLowMemoryUnused = lib.BinaryenGetLowMemoryUnused
@@ -563,11 +569,13 @@ try:
     GetNumTables = lib.BinaryenGetNumTables
     GetOneCallerInlineMaxSize = lib.BinaryenGetOneCallerInlineMaxSize
     GetOptimizeLevel = lib.BinaryenGetOptimizeLevel
+    GetOptimizeStackIR = lib.BinaryenGetOptimizeStackIR
     GetPassArgument = lib.BinaryenGetPassArgument
     GetShrinkLevel = lib.BinaryenGetShrinkLevel
     GetTable = lib.BinaryenGetTable
     GetTableByIndex = lib.BinaryenGetTableByIndex
     GetTag = lib.BinaryenGetTag
+    GetTrapsNeverHappen = lib.BinaryenGetTrapsNeverHappen
     GetZeroFilledMemory = lib.BinaryenGetZeroFilledMemory
     GlobalGet = lib.BinaryenGlobalGet
     GlobalGetGetName = lib.BinaryenGlobalGetGetName
@@ -601,6 +609,7 @@ try:
     GtVecF32x4 = lib.BinaryenGtVecF32x4
     GtVecF64x2 = lib.BinaryenGtVecF64x2
     HasMemory = lib.BinaryenHasMemory
+    HasPassToSkip = lib.BinaryenHasPassToSkip
     HeapTypeAny = lib.BinaryenHeapTypeAny
     HeapTypeArray = lib.BinaryenHeapTypeArray
     HeapTypeEq = lib.BinaryenHeapTypeEq
@@ -910,14 +919,14 @@ try:
     ReinterpretFloat64 = lib.BinaryenReinterpretFloat64
     ReinterpretInt32 = lib.BinaryenReinterpretInt32
     ReinterpretInt64 = lib.BinaryenReinterpretInt64
-    RelaxedFmaVecF32x4 = lib.BinaryenRelaxedFmaVecF32x4
-    RelaxedFmaVecF64x2 = lib.BinaryenRelaxedFmaVecF64x2
-    RelaxedFmsVecF32x4 = lib.BinaryenRelaxedFmsVecF32x4
-    RelaxedFmsVecF64x2 = lib.BinaryenRelaxedFmsVecF64x2
+    RelaxedMaddVecF32x4 = lib.BinaryenRelaxedMaddVecF32x4
+    RelaxedMaddVecF64x2 = lib.BinaryenRelaxedMaddVecF64x2
     RelaxedMaxVecF32x4 = lib.BinaryenRelaxedMaxVecF32x4
     RelaxedMaxVecF64x2 = lib.BinaryenRelaxedMaxVecF64x2
     RelaxedMinVecF32x4 = lib.BinaryenRelaxedMinVecF32x4
     RelaxedMinVecF64x2 = lib.BinaryenRelaxedMinVecF64x2
+    RelaxedNmaddVecF32x4 = lib.BinaryenRelaxedNmaddVecF32x4
+    RelaxedNmaddVecF64x2 = lib.BinaryenRelaxedNmaddVecF64x2
     RelaxedQ15MulrSVecI16x8 = lib.BinaryenRelaxedQ15MulrSVecI16x8
     RelaxedSwizzleVecI8x16 = lib.BinaryenRelaxedSwizzleVecI8x16
     RelaxedTruncSVecF32x4ToVecI32x4 = lib.BinaryenRelaxedTruncSVecF32x4ToVecI32x4
@@ -1034,17 +1043,21 @@ try:
     SelectSetIfTrue = lib.BinaryenSelectSetIfTrue
     SetAllowInliningFunctionsWithLoops = lib.BinaryenSetAllowInliningFunctionsWithLoops
     SetAlwaysInlineMaxSize = lib.BinaryenSetAlwaysInlineMaxSize
+    SetClosedWorld = lib.BinaryenSetClosedWorld
     SetColorsEnabled = lib.BinaryenSetColorsEnabled
     SetDebugInfo = lib.BinaryenSetDebugInfo
     SetFastMath = lib.BinaryenSetFastMath
     SetFlexibleInlineMaxSize = lib.BinaryenSetFlexibleInlineMaxSize
+    SetGenerateStackIR = lib.BinaryenSetGenerateStackIR
     SetLowMemoryUnused = lib.BinaryenSetLowMemoryUnused
     SetMemory = lib.BinaryenSetMemory
     SetOneCallerInlineMaxSize = lib.BinaryenSetOneCallerInlineMaxSize
     SetOptimizeLevel = lib.BinaryenSetOptimizeLevel
+    SetOptimizeStackIR = lib.BinaryenSetOptimizeStackIR
     SetPassArgument = lib.BinaryenSetPassArgument
     SetShrinkLevel = lib.BinaryenSetShrinkLevel
     SetStart = lib.BinaryenSetStart
+    SetTrapsNeverHappen = lib.BinaryenSetTrapsNeverHappen
     SetZeroFilledMemory = lib.BinaryenSetZeroFilledMemory
     ShlInt32 = lib.BinaryenShlInt32
     ShlInt64 = lib.BinaryenShlInt64
@@ -1261,6 +1274,7 @@ try:
     TableHasMax = lib.BinaryenTableHasMax
     TableImportGetBase = lib.BinaryenTableImportGetBase
     TableImportGetModule = lib.BinaryenTableImportGetModule
+    TableInitId = lib.BinaryenTableInitId
     TableSet = lib.BinaryenTableSet
     TableSetGetIndex = lib.BinaryenTableSetGetIndex
     TableSetGetTable = lib.BinaryenTableSetGetTable
