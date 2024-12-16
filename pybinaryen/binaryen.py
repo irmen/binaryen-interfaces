@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.119"
-__binaryen_lib_version__ = "119"
+__version__ = "1.120"
+__binaryen_lib_version__ = "120"
 
 
 import os

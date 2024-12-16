@@ -6,7 +6,7 @@ from cffi import FFI
 # For instance: https://github.com/WebAssembly/binaryen/releases/tag/version_105
 
 # path where the binary release package from Binaryen is extracted to.
-binaryen_extract_path = "./binaryen-version_110"
+binaryen_extract_path = "./binaryen-version_120"
 
 
 def cleanup_headers(headers):
