@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.120"
-__binaryen_lib_version__ = "120"
+__version__ = "1.122"
+__binaryen_lib_version__ = "122"
 
 
 import os
@@ -795,7 +795,6 @@ try:
     ModuleAllocateAndWrite = lib.BinaryenModuleAllocateAndWrite
     ModuleAllocateAndWriteStackIR = lib.BinaryenModuleAllocateAndWriteStackIR
     ModuleAllocateAndWriteText = lib.BinaryenModuleAllocateAndWriteText
-    ModuleAutoDrop = lib.BinaryenModuleAutoDrop
     ModuleCreate = lib.BinaryenModuleCreate
     ModuleDispose = lib.BinaryenModuleDispose
     ModuleGetDebugInfoFileName = lib.BinaryenModuleGetDebugInfoFileName
@@ -950,6 +949,7 @@ try:
     ReplaceLaneVecI64x2 = lib.BinaryenReplaceLaneVecI64x2
     ReplaceLaneVecI8x16 = lib.BinaryenReplaceLaneVecI8x16
     ResumeId = lib.BinaryenResumeId
+    ResumeThrowId = lib.BinaryenResumeThrowId
     Rethrow = lib.BinaryenRethrow
     RethrowGetTarget = lib.BinaryenRethrowGetTarget
     RethrowId = lib.BinaryenRethrowId
@@ -1106,6 +1106,7 @@ try:
     SqrtFloat64 = lib.BinaryenSqrtFloat64
     SqrtVecF32x4 = lib.BinaryenSqrtVecF32x4
     SqrtVecF64x2 = lib.BinaryenSqrtVecF64x2
+    StackSwitchId = lib.BinaryenStackSwitchId
     Store = lib.BinaryenStore
     Store16LaneVec128 = lib.BinaryenStore16LaneVec128
     Store32LaneVec128 = lib.BinaryenStore32LaneVec128
@@ -1193,6 +1194,7 @@ try:
     StringWTF16GetId = lib.BinaryenStringWTF16GetId
     StringWTF16GetSetPos = lib.BinaryenStringWTF16GetSetPos
     StringWTF16GetSetRef = lib.BinaryenStringWTF16GetSetRef
+    StructCmpxchgId = lib.BinaryenStructCmpxchgId
     StructGet = lib.BinaryenStructGet
     StructGetGetIndex = lib.BinaryenStructGetGetIndex
     StructGetGetRef = lib.BinaryenStructGetGetRef
@@ -1209,6 +1211,7 @@ try:
     StructNewInsertOperandAt = lib.BinaryenStructNewInsertOperandAt
     StructNewRemoveOperandAt = lib.BinaryenStructNewRemoveOperandAt
     StructNewSetOperandAt = lib.BinaryenStructNewSetOperandAt
+    StructRMWId = lib.BinaryenStructRMWId
     StructSet = lib.BinaryenStructSet
     StructSetGetIndex = lib.BinaryenStructSetGetIndex
     StructSetGetRef = lib.BinaryenStructSetGetRef

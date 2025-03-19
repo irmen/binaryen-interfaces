@@ -764,7 +764,6 @@ fun BinaryenModuleAddDebugInfoFileName(module: BinaryenModuleRef, filename: Stri
 fun BinaryenModuleAllocateAndWrite(module: BinaryenModuleRef, sourceMapUrl: String): BinaryenModuleAllocateAndWriteResult
 fun BinaryenModuleAllocateAndWriteStackIR(module: BinaryenModuleRef): String
 fun BinaryenModuleAllocateAndWriteText(module: BinaryenModuleRef): String
-fun BinaryenModuleAutoDrop(module: BinaryenModuleRef)
 fun BinaryenModuleCreate(): BinaryenModuleRef
 fun BinaryenModuleDispose(module: BinaryenModuleRef)
 fun BinaryenModuleGetDebugInfoFileName(module: BinaryenModuleRef, index: Int): String
@@ -919,6 +918,7 @@ fun BinaryenReplaceLaneVecI32x4(): BinaryenOp
 fun BinaryenReplaceLaneVecI64x2(): BinaryenOp
 fun BinaryenReplaceLaneVecI8x16(): BinaryenOp
 fun BinaryenResumeId(): BinaryenExpressionId
+fun BinaryenResumeThrowId(): BinaryenExpressionId
 fun BinaryenRethrow(module: BinaryenModuleRef, target: String): BinaryenExpressionRef
 fun BinaryenRethrowGetTarget(expr: BinaryenExpressionRef): String
 fun BinaryenRethrowId(): BinaryenExpressionId
@@ -1002,7 +1002,7 @@ fun BinaryenSIMDTernarySetA(expr: BinaryenExpressionRef, aExpr: BinaryenExpressi
 fun BinaryenSIMDTernarySetB(expr: BinaryenExpressionRef, bExpr: BinaryenExpressionRef)
 fun BinaryenSIMDTernarySetC(expr: BinaryenExpressionRef, cExpr: BinaryenExpressionRef)
 fun BinaryenSIMDTernarySetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
-fun BinaryenSelect(module: BinaryenModuleRef, condition: BinaryenExpressionRef, ifTrue: BinaryenExpressionRef, ifFalse: BinaryenExpressionRef, type: BinaryenType): BinaryenExpressionRef
+fun BinaryenSelect(module: BinaryenModuleRef, condition: BinaryenExpressionRef, ifTrue: BinaryenExpressionRef, ifFalse: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenSelectGetCondition(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenSelectGetIfFalse(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenSelectGetIfTrue(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1075,6 +1075,7 @@ fun BinaryenSqrtFloat32(): BinaryenOp
 fun BinaryenSqrtFloat64(): BinaryenOp
 fun BinaryenSqrtVecF32x4(): BinaryenOp
 fun BinaryenSqrtVecF64x2(): BinaryenOp
+fun BinaryenStackSwitchId(): BinaryenExpressionId
 fun BinaryenStore(module: BinaryenModuleRef, bytes: Int, offset: Int, align: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType, memoryName: String): BinaryenExpressionRef
 fun BinaryenStore16LaneVec128(): BinaryenOp
 fun BinaryenStore32LaneVec128(): BinaryenOp
@@ -1162,6 +1163,7 @@ fun BinaryenStringWTF16GetGetRef(expr: BinaryenExpressionRef): BinaryenExpressio
 fun BinaryenStringWTF16GetId(): BinaryenExpressionId
 fun BinaryenStringWTF16GetSetPos(expr: BinaryenExpressionRef, posExpr: BinaryenExpressionRef)
 fun BinaryenStringWTF16GetSetRef(expr: BinaryenExpressionRef, refExpr: BinaryenExpressionRef)
+fun BinaryenStructCmpxchgId(): BinaryenExpressionId
 fun BinaryenStructGet(module: BinaryenModuleRef, index: Int, ref: BinaryenExpressionRef, type: BinaryenType, signed_: Boolean): BinaryenExpressionRef
 fun BinaryenStructGetGetIndex(expr: BinaryenExpressionRef): Int
 fun BinaryenStructGetGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1178,6 +1180,7 @@ fun BinaryenStructNewId(): BinaryenExpressionId
 fun BinaryenStructNewInsertOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
 fun BinaryenStructNewRemoveOperandAt(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
 fun BinaryenStructNewSetOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
+fun BinaryenStructRMWId(): BinaryenExpressionId
 fun BinaryenStructSet(module: BinaryenModuleRef, index: Int, ref: BinaryenExpressionRef, value: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStructSetGetIndex(expr: BinaryenExpressionRef): Int
 fun BinaryenStructSetGetRef(expr: BinaryenExpressionRef): BinaryenExpressionRef
