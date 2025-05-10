@@ -5,8 +5,8 @@ Author: Irmen de Jong (irmen@razorvine.net)
 Software license: "MIT software license". See http://opensource.org/licenses/MIT
 """
 
-__version__ = "1.122"
-__binaryen_lib_version__ = "122"
+__version__ = "1.123"
+__binaryen_lib_version__ = "123"
 
 
 import os
@@ -489,8 +489,11 @@ try:
     FeatureAll = lib.BinaryenFeatureAll
     FeatureAtomics = lib.BinaryenFeatureAtomics
     FeatureBulkMemory = lib.BinaryenFeatureBulkMemory
+    FeatureBulkMemoryOpt = lib.BinaryenFeatureBulkMemoryOpt
+    FeatureCallIndirectOverlong = lib.BinaryenFeatureCallIndirectOverlong
     FeatureExceptionHandling = lib.BinaryenFeatureExceptionHandling
     FeatureExtendedConst = lib.BinaryenFeatureExtendedConst
+    FeatureFP16 = lib.BinaryenFeatureFP16
     FeatureGC = lib.BinaryenFeatureGC
     FeatureMVP = lib.BinaryenFeatureMVP
     FeatureMemory64 = lib.BinaryenFeatureMemory64
@@ -501,7 +504,9 @@ try:
     FeatureReferenceTypes = lib.BinaryenFeatureReferenceTypes
     FeatureRelaxedSIMD = lib.BinaryenFeatureRelaxedSIMD
     FeatureSIMD128 = lib.BinaryenFeatureSIMD128
+    FeatureSharedEverything = lib.BinaryenFeatureSharedEverything
     FeatureSignExt = lib.BinaryenFeatureSignExt
+    FeatureStackSwitching = lib.BinaryenFeatureStackSwitching
     FeatureStrings = lib.BinaryenFeatureStrings
     FeatureTailCall = lib.BinaryenFeatureTailCall
     FloorFloat32 = lib.BinaryenFloorFloat32

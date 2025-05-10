@@ -458,8 +458,11 @@ fun BinaryenExtractLaneVecI64x2(): BinaryenOp
 fun BinaryenFeatureAll(): BinaryenFeatures
 fun BinaryenFeatureAtomics(): BinaryenFeatures
 fun BinaryenFeatureBulkMemory(): BinaryenFeatures
+fun BinaryenFeatureBulkMemoryOpt(): BinaryenFeatures
+fun BinaryenFeatureCallIndirectOverlong(): BinaryenFeatures
 fun BinaryenFeatureExceptionHandling(): BinaryenFeatures
 fun BinaryenFeatureExtendedConst(): BinaryenFeatures
+fun BinaryenFeatureFP16(): BinaryenFeatures
 fun BinaryenFeatureGC(): BinaryenFeatures
 fun BinaryenFeatureMVP(): BinaryenFeatures
 fun BinaryenFeatureMemory64(): BinaryenFeatures
@@ -470,7 +473,9 @@ fun BinaryenFeatureNontrappingFPToInt(): BinaryenFeatures
 fun BinaryenFeatureReferenceTypes(): BinaryenFeatures
 fun BinaryenFeatureRelaxedSIMD(): BinaryenFeatures
 fun BinaryenFeatureSIMD128(): BinaryenFeatures
+fun BinaryenFeatureSharedEverything(): BinaryenFeatures
 fun BinaryenFeatureSignExt(): BinaryenFeatures
+fun BinaryenFeatureStackSwitching(): BinaryenFeatures
 fun BinaryenFeatureStrings(): BinaryenFeatures
 fun BinaryenFeatureTailCall(): BinaryenFeatures
 fun BinaryenFloorFloat32(): BinaryenOp
@@ -863,7 +868,7 @@ fun BinaryenRefEqGetRight(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenRefEqId(): BinaryenExpressionId
 fun BinaryenRefEqSetLeft(expr: BinaryenExpressionRef, left: BinaryenExpressionRef)
 fun BinaryenRefEqSetRight(expr: BinaryenExpressionRef, right: BinaryenExpressionRef)
-fun BinaryenRefFunc(module: BinaryenModuleRef, func: String, type: BinaryenType): BinaryenExpressionRef
+fun BinaryenRefFunc(module: BinaryenModuleRef, func: String, type: BinaryenHeapType): BinaryenExpressionRef
 fun BinaryenRefFuncGetFunc(expr: BinaryenExpressionRef): String
 fun BinaryenRefFuncId(): BinaryenExpressionId
 fun BinaryenRefFuncSetFunc(expr: BinaryenExpressionRef, funcName: String)
