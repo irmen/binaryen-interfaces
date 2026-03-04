@@ -23,6 +23,7 @@ typealias BinaryenPackedType = Int
 typealias BinaryenHeapType = Pointer
 typealias BinaryenExpressionId = Int
 typealias BinaryenExternalKind = Int
+typealias BinaryenMemoryOrder = Byte
 typealias BinaryenFeatures = Int
 typealias BinaryenModuleRef = Pointer
 class BinaryenLiteral: Structure()
@@ -56,7 +57,7 @@ interface Binaryen: Library {
         }
 
         val INSTANCE: Binaryen by lazy { Native.load("binaryen", Binaryen::class.java) }
-        val VERSION = "124"
+        val VERSION = "126"
 
 //        init {
 //            val library = NativeLibrary.getInstance("/usr/local/lib/libbinaryen.so")
@@ -218,15 +219,17 @@ fun BinaryenArraySetSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExp
 fun BinaryenArrayTypeGetElementPackedType(heapType: BinaryenHeapType): BinaryenPackedType
 fun BinaryenArrayTypeGetElementType(heapType: BinaryenHeapType): BinaryenType
 fun BinaryenArrayTypeIsElementMutable(heapType: BinaryenHeapType): Boolean
-fun BinaryenAtomicCmpxchg(module: BinaryenModuleRef, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, expected: BinaryenExpressionRef, replacement: BinaryenExpressionRef, type: BinaryenType, memoryName: String): BinaryenExpressionRef
+fun BinaryenAtomicCmpxchg(module: BinaryenModuleRef, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, expected: BinaryenExpressionRef, replacement: BinaryenExpressionRef, type: BinaryenType, memoryName: String, order: BinaryenMemoryOrder): BinaryenExpressionRef
 fun BinaryenAtomicCmpxchgGetBytes(expr: BinaryenExpressionRef): Int
 fun BinaryenAtomicCmpxchgGetExpected(expr: BinaryenExpressionRef): BinaryenExpressionRef
+fun BinaryenAtomicCmpxchgGetMemoryOrder(expr: BinaryenExpressionRef): BinaryenMemoryOrder
 fun BinaryenAtomicCmpxchgGetOffset(expr: BinaryenExpressionRef): Int
 fun BinaryenAtomicCmpxchgGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenAtomicCmpxchgGetReplacement(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenAtomicCmpxchgId(): BinaryenExpressionId
 fun BinaryenAtomicCmpxchgSetBytes(expr: BinaryenExpressionRef, bytes: Int)
 fun BinaryenAtomicCmpxchgSetExpected(expr: BinaryenExpressionRef, expectedExpr: BinaryenExpressionRef)
+fun BinaryenAtomicCmpxchgSetMemoryOrder(expr: BinaryenExpressionRef, order: BinaryenMemoryOrder)
 fun BinaryenAtomicCmpxchgSetOffset(expr: BinaryenExpressionRef, offset: Int)
 fun BinaryenAtomicCmpxchgSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
 fun BinaryenAtomicCmpxchgSetReplacement(expr: BinaryenExpressionRef, replacementExpr: BinaryenExpressionRef)
@@ -234,17 +237,18 @@ fun BinaryenAtomicFence(module: BinaryenModuleRef): BinaryenExpressionRef
 fun BinaryenAtomicFenceGetOrder(expr: BinaryenExpressionRef): Byte
 fun BinaryenAtomicFenceId(): BinaryenExpressionId
 fun BinaryenAtomicFenceSetOrder(expr: BinaryenExpressionRef, order: Byte)
-fun BinaryenAtomicLoad(module: BinaryenModuleRef, bytes: Int, offset: Int, type: BinaryenType, ptr: BinaryenExpressionRef, memoryName: String): BinaryenExpressionRef
+fun BinaryenAtomicLoad(module: BinaryenModuleRef, bytes: Int, offset: Int, type: BinaryenType, ptr: BinaryenExpressionRef, memoryName: String, order: BinaryenMemoryOrder): BinaryenExpressionRef
 fun BinaryenAtomicNotify(module: BinaryenModuleRef, ptr: BinaryenExpressionRef, notifyCount: BinaryenExpressionRef, memoryName: String): BinaryenExpressionRef
 fun BinaryenAtomicNotifyGetNotifyCount(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenAtomicNotifyGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenAtomicNotifyId(): BinaryenExpressionId
 fun BinaryenAtomicNotifySetNotifyCount(expr: BinaryenExpressionRef, notifyCountExpr: BinaryenExpressionRef)
 fun BinaryenAtomicNotifySetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
-fun BinaryenAtomicRMW(module: BinaryenModuleRef, op: BinaryenOp, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType, memoryName: String): BinaryenExpressionRef
+fun BinaryenAtomicRMW(module: BinaryenModuleRef, op: BinaryenOp, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType, memoryName: String, order: BinaryenMemoryOrder): BinaryenExpressionRef
 fun BinaryenAtomicRMWAdd(): BinaryenOp
 fun BinaryenAtomicRMWAnd(): BinaryenOp
 fun BinaryenAtomicRMWGetBytes(expr: BinaryenExpressionRef): Int
+fun BinaryenAtomicRMWGetMemoryOrder(expr: BinaryenExpressionRef): BinaryenMemoryOrder
 fun BinaryenAtomicRMWGetOffset(expr: BinaryenExpressionRef): Int
 fun BinaryenAtomicRMWGetOp(expr: BinaryenExpressionRef): BinaryenOp
 fun BinaryenAtomicRMWGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -252,6 +256,7 @@ fun BinaryenAtomicRMWGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRe
 fun BinaryenAtomicRMWId(): BinaryenExpressionId
 fun BinaryenAtomicRMWOr(): BinaryenOp
 fun BinaryenAtomicRMWSetBytes(expr: BinaryenExpressionRef, bytes: Int)
+fun BinaryenAtomicRMWSetMemoryOrder(expr: BinaryenExpressionRef, order: BinaryenMemoryOrder)
 fun BinaryenAtomicRMWSetOffset(expr: BinaryenExpressionRef, offset: Int)
 fun BinaryenAtomicRMWSetOp(expr: BinaryenExpressionRef, op: BinaryenOp)
 fun BinaryenAtomicRMWSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
@@ -259,7 +264,7 @@ fun BinaryenAtomicRMWSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenEx
 fun BinaryenAtomicRMWSub(): BinaryenOp
 fun BinaryenAtomicRMWXchg(): BinaryenOp
 fun BinaryenAtomicRMWXor(): BinaryenOp
-fun BinaryenAtomicStore(module: BinaryenModuleRef, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType, memoryName: String): BinaryenExpressionRef
+fun BinaryenAtomicStore(module: BinaryenModuleRef, bytes: Int, offset: Int, ptr: BinaryenExpressionRef, value: BinaryenExpressionRef, type: BinaryenType, memoryName: String, order: BinaryenMemoryOrder): BinaryenExpressionRef
 fun BinaryenAtomicWait(module: BinaryenModuleRef, ptr: BinaryenExpressionRef, expected: BinaryenExpressionRef, timeout: BinaryenExpressionRef, type: BinaryenType, memoryName: String): BinaryenExpressionRef
 fun BinaryenAtomicWaitGetExpected(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenAtomicWaitGetExpectedType(expr: BinaryenExpressionRef): BinaryenType
@@ -343,7 +348,7 @@ fun BinaryenCallIndirectSetTable(expr: BinaryenExpressionRef, table: String)
 fun BinaryenCallIndirectSetTarget(expr: BinaryenExpressionRef, targetExpr: BinaryenExpressionRef)
 fun BinaryenCallInsertOperandAt(expr: BinaryenExpressionRef, index: Int, operandExpr: BinaryenExpressionRef)
 fun BinaryenCallIsReturn(expr: BinaryenExpressionRef): Boolean
-fun BinaryenCallRef(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: Int, type: BinaryenType, isReturn: Boolean): BinaryenExpressionRef
+fun BinaryenCallRef(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: Int, type: BinaryenType): BinaryenExpressionRef
 fun BinaryenCallRefAppendOperand(expr: BinaryenExpressionRef, operandExpr: BinaryenExpressionRef): Int
 fun BinaryenCallRefGetNumOperands(expr: BinaryenExpressionRef): Int
 fun BinaryenCallRefGetOperandAt(expr: BinaryenExpressionRef, index: Int): BinaryenExpressionRef
@@ -518,6 +523,7 @@ fun BinaryenFeatureMultivalue(): BinaryenFeatures
 fun BinaryenFeatureMutableGlobals(): BinaryenFeatures
 fun BinaryenFeatureNontrappingFPToInt(): BinaryenFeatures
 fun BinaryenFeatureReferenceTypes(): BinaryenFeatures
+fun BinaryenFeatureRelaxedAtomics(): BinaryenFeatures
 fun BinaryenFeatureRelaxedSIMD(): BinaryenFeatures
 fun BinaryenFeatureSIMD128(): BinaryenFeatures
 fun BinaryenFeatureSharedEverything(): BinaryenFeatures
@@ -711,14 +717,15 @@ fun BinaryenLoad8x8SVec128(): BinaryenOp
 fun BinaryenLoad8x8UVec128(): BinaryenOp
 fun BinaryenLoadGetAlign(expr: BinaryenExpressionRef): Int
 fun BinaryenLoadGetBytes(expr: BinaryenExpressionRef): Int
+fun BinaryenLoadGetMemoryOrder(expr: BinaryenExpressionRef): BinaryenMemoryOrder
 fun BinaryenLoadGetOffset(expr: BinaryenExpressionRef): Int
 fun BinaryenLoadGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenLoadId(): BinaryenExpressionId
 fun BinaryenLoadIsAtomic(expr: BinaryenExpressionRef): Boolean
 fun BinaryenLoadIsSigned(expr: BinaryenExpressionRef): Boolean
 fun BinaryenLoadSetAlign(expr: BinaryenExpressionRef, align: Int)
-fun BinaryenLoadSetAtomic(expr: BinaryenExpressionRef, isAtomic: Boolean)
 fun BinaryenLoadSetBytes(expr: BinaryenExpressionRef, bytes: Int)
+fun BinaryenLoadSetMemoryOrder(expr: BinaryenExpressionRef, order: BinaryenMemoryOrder)
 fun BinaryenLoadSetOffset(expr: BinaryenExpressionRef, offset: Int)
 fun BinaryenLoadSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
 fun BinaryenLoadSetSigned(expr: BinaryenExpressionRef, isSigned: Boolean)
@@ -802,6 +809,9 @@ fun BinaryenMemoryInitSetSegment(expr: BinaryenExpressionRef, segment: String)
 fun BinaryenMemoryInitSetSize(expr: BinaryenExpressionRef, sizeExpr: BinaryenExpressionRef)
 fun BinaryenMemoryIs64(module: BinaryenModuleRef, name: String): Boolean
 fun BinaryenMemoryIsShared(module: BinaryenModuleRef, name: String): Boolean
+fun BinaryenMemoryOrderAcqRel(): BinaryenMemoryOrder
+fun BinaryenMemoryOrderSeqCst(): BinaryenMemoryOrder
+fun BinaryenMemoryOrderUnordered(): BinaryenMemoryOrder
 fun BinaryenMemorySize(module: BinaryenModuleRef, memoryName: String, memoryIs64: Boolean): BinaryenExpressionRef
 fun BinaryenMemorySizeId(): BinaryenExpressionId
 fun BinaryenMinFloat32(): BinaryenOp
@@ -982,6 +992,7 @@ fun BinaryenRethrowSetTarget(expr: BinaryenExpressionRef, target: String)
 fun BinaryenReturn(module: BinaryenModuleRef, value: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenReturnCall(module: BinaryenModuleRef, target: String, operands: Array<BinaryenExpressionRef>?, numOperands: Int, returnType: BinaryenType): BinaryenExpressionRef
 fun BinaryenReturnCallIndirect(module: BinaryenModuleRef, table: String, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: Int, params: BinaryenType, results: BinaryenType): BinaryenExpressionRef
+fun BinaryenReturnCallRef(module: BinaryenModuleRef, target: BinaryenExpressionRef, operands: Array<BinaryenExpressionRef>?, numOperands: Int, type: BinaryenType): BinaryenExpressionRef
 fun BinaryenReturnGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenReturnId(): BinaryenExpressionId
 fun BinaryenReturnSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
@@ -1140,6 +1151,7 @@ fun BinaryenStore64LaneVec128(): BinaryenOp
 fun BinaryenStore8LaneVec128(): BinaryenOp
 fun BinaryenStoreGetAlign(expr: BinaryenExpressionRef): Int
 fun BinaryenStoreGetBytes(expr: BinaryenExpressionRef): Int
+fun BinaryenStoreGetMemoryOrder(expr: BinaryenExpressionRef): BinaryenMemoryOrder
 fun BinaryenStoreGetOffset(expr: BinaryenExpressionRef): Int
 fun BinaryenStoreGetPtr(expr: BinaryenExpressionRef): BinaryenExpressionRef
 fun BinaryenStoreGetValue(expr: BinaryenExpressionRef): BinaryenExpressionRef
@@ -1147,8 +1159,8 @@ fun BinaryenStoreGetValueType(expr: BinaryenExpressionRef): BinaryenType
 fun BinaryenStoreId(): BinaryenExpressionId
 fun BinaryenStoreIsAtomic(expr: BinaryenExpressionRef): Boolean
 fun BinaryenStoreSetAlign(expr: BinaryenExpressionRef, align: Int)
-fun BinaryenStoreSetAtomic(expr: BinaryenExpressionRef, isAtomic: Boolean)
 fun BinaryenStoreSetBytes(expr: BinaryenExpressionRef, bytes: Int)
+fun BinaryenStoreSetMemoryOrder(expr: BinaryenExpressionRef, order: BinaryenMemoryOrder)
 fun BinaryenStoreSetOffset(expr: BinaryenExpressionRef, offset: Int)
 fun BinaryenStoreSetPtr(expr: BinaryenExpressionRef, ptrExpr: BinaryenExpressionRef)
 fun BinaryenStoreSetValue(expr: BinaryenExpressionRef, valueExpr: BinaryenExpressionRef)
